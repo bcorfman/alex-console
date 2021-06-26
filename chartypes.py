@@ -1,0 +1,2 @@
+HALLWAY_CHAR = '~'
+ROOM_CHAR = '█'
