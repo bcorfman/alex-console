@@ -1,35 +1,74 @@
 from level import Level, Perimeter
-from util import location_ordering
-from search import depth_first_search
+from util import location_ordering, ROOM_CHAR
+from search import depth_first_search, BlueprintSearchProblem
 
 
 def test_load_layout():
     level = Level()
-    level._load('level1.txt')
-    assert (level._layout[2][30] == 'C')
+    level._load_layout('level1.txt')
+    assert (level._layout[1][30] == 'C')
+
+
+def test_load_layout_and_add_border():
+    level = Level()
+    level._load_layout('level1.txt')
+    level._add_border_to_layout()
+    assert (level._layout[2][31] == 'C')
 
 
 def test_location_ordering():
     level = Level()
-    level._load('level1.txt')
-    locations, _ = depth_first_search(level._layout, 13, 3, '█')
-    assert ((12, 3) == min(locations, key=location_ordering))
-    assert ((14, 10) == max(locations, key=location_ordering))
+    level._load_layout('level1.txt')
+    level._add_border_to_layout()
+    start_node = (13, 4)
+    problem = BlueprintSearchProblem(level._layout, start_node, ROOM_CHAR)
+    results = depth_first_search(problem)
+    assert ((12, 4) == min(results.visited, key=location_ordering))
+    assert ((14, 11) == max(results.visited, key=location_ordering))
 
 
 def test_find_room_name():
     level = Level()
-    level._load('level1.txt')
-    p = Perimeter((1, 16), (3, 49))
+    level._load_layout('level1.txt')
+    level._add_border_to_layout()
+    p = Perimeter((1, 17), (3, 50))
     assert p.find_room_name(level._layout) == 'CARGO'
 
 
 def test_find_elevators():
     level = Level()
-    level._load('level1.txt')
+    level._load_layout('level1.txt')
+    level._add_border_to_layout()
     level._find_elevators()
     elevator1, elevator2 = level.elevators[0], level.elevators[1]
-    assert (elevator1.name == 'ELEVATOR' and elevator1.perimeter.top_left == (1, 61) and
-            elevator1.perimeter.bottom_right == (3, 68))
-    assert (elevator2.name == 'ELEVATOR' and elevator2.perimeter.top_left == (12, 3) and
-            elevator2.perimeter.bottom_right == (14, 10))
+    assert (elevator1.name == 'ELEVATOR' and elevator1.perimeter.top_left == (1, 62) and
+            elevator1.perimeter.bottom_right == (3, 69))
+    assert (elevator2.name == 'ELEVATOR' and elevator2.perimeter.top_left == (12, 4) and
+            elevator2.perimeter.bottom_right == (14, 11))
+
+
+def test_initialize_level():
+    level = Level('level1.txt')
+    assert len(level.rooms) == 3 and len(level.elevators) == 2
+
+
+def test_hallways():
+    level = Level('level1.txt')
+    assert len(level.hallways) == 17
+    assert frozenset([(2, i) for i in range(51, 57)]) in level.hallways
+    assert frozenset([(2, 57)]) in level.hallways
+    assert frozenset([(2, i) for i in range(58, 62)])
+    assert frozenset([(i, 57) for i in range(3, 10)]) in level.hallways
+    assert frozenset([(10, 57)]) in level.hallways
+    assert frozenset([(10, i) for i in range(52, 57)]) in level.hallways
+    assert frozenset([(13, i) for i in range(12, 16)])
+    assert frozenset([(13, 16)]) in level.hallways
+    assert frozenset([(i, 16) for i in range(11, 13)]) in level.hallways
+    assert frozenset([(10, 16)]) in level.hallways
+    assert frozenset([(i, 16) for i in range(8, 10)]) in level.hallways
+    assert frozenset([(10, i) for i in range(17, 24)]) in level.hallways
+    assert frozenset([(10, i) for i in range(5, 16)]) in level.hallways
+    assert frozenset([(10, 4)]) in level.hallways
+    assert frozenset([(i, 4) for i in range(3, 10)]) in level.hallways
+    assert frozenset([(2, 4)]) in level.hallways
+    assert frozenset([(2, i) for i in range(5, 17)]) in level.hallways
