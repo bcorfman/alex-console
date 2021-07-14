@@ -6,14 +6,14 @@ from search import depth_first_search, BlueprintSearchProblem
 def test_load_layout():
     level = Level()
     level._load_layout('level1.txt')
-    assert (level._layout[1][30] == 'C')
+    assert (level.layout[1][30] == 'C')
 
 
 def test_load_layout_and_add_border():
     level = Level()
     level._load_layout('level1.txt')
     level._add_border_to_layout()
-    assert (level._layout[2][31] == 'C')
+    assert (level.layout[2][31] == 'C')
 
 
 def test_location_ordering():
@@ -21,7 +21,7 @@ def test_location_ordering():
     level._load_layout('level1.txt')
     level._add_border_to_layout()
     start_node = (13, 4)
-    problem = BlueprintSearchProblem(level._layout, start_node, ROOM_CHAR)
+    problem = BlueprintSearchProblem(level.layout, start_node, ROOM_CHAR)
     results = depth_first_search(problem)
     assert ((12, 4) == min(results.visited, key=location_ordering))
     assert ((14, 11) == max(results.visited, key=location_ordering))
@@ -32,7 +32,7 @@ def test_find_room_name():
     level._load_layout('level1.txt')
     level._add_border_to_layout()
     p = Perimeter((1, 17), (3, 50))
-    assert p.find_room_name(level._layout) == 'CARGO'
+    assert p.find_room_name(level.layout) == 'CARGO'
 
 
 def test_find_elevators():

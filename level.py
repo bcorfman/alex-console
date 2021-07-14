@@ -9,7 +9,7 @@ class Level:
         self.hallways = []
         self.rooms = []
         self.elevators = []
-        self._layout = []
+        self.layout = []
         if filename:
             self._load_layout(filename)
             self._add_border_to_layout()
@@ -18,22 +18,22 @@ class Level:
 
     def _load_layout(self, filename):
         with open(filename) as f:
-            self._layout = [line.rstrip() for line in f.readlines()]
+            self.layout = [line.rstrip() for line in f.readlines()]
 
     def _add_border_to_layout(self):
         lines = [''.ljust(ROW_LENGTH)]
-        for line in self._layout:
+        for line in self.layout:
             lines.append(line.rjust(len(line) + 1).ljust(ROW_LENGTH))
         lines.append(ROW_LENGTH * ' ')
-        self._layout = lines
+        self.layout = lines
 
     def _find_elevators(self):
         self.elevators = []
-        for row, r_item in enumerate(self._layout):
+        for row, r_item in enumerate(self.layout):
             col_length = len(r_item) - 3
             for col in range(col_length):
                 if r_item[col:col + 4].upper() == 'ELEV':
-                    problem = BlueprintSearchProblem(self._layout, (row, col - 2), ROOM_CHAR)
+                    problem = BlueprintSearchProblem(self.layout, (row, col - 2), ROOM_CHAR)
                     results = depth_first_search(problem)
                     p = Perimeter(min(results.visited, key=location_ordering),
                                   max(results.visited, key=location_ordering))
@@ -43,7 +43,7 @@ class Level:
     def _search_for_exit_in_row(self, row, start, end):
         exit_ = None
         for i in range(start, end):
-            if self._layout[row][i] == HALLWAY_CHAR:
+            if self.layout[row][i] == HALLWAY_CHAR:
                 exit_ = row, i
                 break
         return exit_
@@ -51,7 +51,7 @@ class Level:
     def _search_for_exit_in_col(self, col, start, end):
         exit_ = None
         for i in range(start, end):
-            if self._layout[i][col] == HALLWAY_CHAR:
+            if self.layout[i][col] == HALLWAY_CHAR:
                 exit_ = i, col
                 break
         return exit_
@@ -75,18 +75,18 @@ class Level:
             perimeters_found.add(elevator.perimeter)
         # pick first exit of each elevator as a starting point for search
         for elevator in self.elevators:
-            problem = BlueprintSearchProblem(self._layout, elevator.exits[0], HALLWAY_CHAR)
+            problem = BlueprintSearchProblem(self.layout, elevator.exits[0], HALLWAY_CHAR)
             results = depth_first_search(problem, return_outliers=True)
             locations, room_entrances = results.visited, results.entrances
             self.hallways.extend(results.hallways)
             # Collect information on each new room. Don't consider rooms that have already been found.
             for entrance in room_entrances:
-                problem = BlueprintSearchProblem(self._layout, entrance, ROOM_CHAR)
+                problem = BlueprintSearchProblem(self.layout, entrance, ROOM_CHAR)
                 results = depth_first_search(problem)
                 p = Perimeter(min(results.visited, key=location_ordering),
                               max(results.visited, key=location_ordering))
                 if p not in perimeters_found:
-                    name = p.find_room_name(self._layout)
+                    name = p.find_room_name(self.layout)
                     exits = self._identify_room_exits(p)
                     perimeters_found.add(p)
                     self.rooms.append(Room(name, p, exits))
