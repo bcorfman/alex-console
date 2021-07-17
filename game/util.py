@@ -3,13 +3,10 @@ import os
 from dataclasses import dataclass
 from .chartypes import ROOM_CHAR
 
-# noinspection PyProtectedMember
-SYS__MEIPASS = sys._MEIPASS
-
 
 def get_cwd():
     try:
-        wd = SYS__MEIPASS
+        wd = sys._MEIPASS
     except AttributeError:
         wd = os.getcwd()
     return wd
