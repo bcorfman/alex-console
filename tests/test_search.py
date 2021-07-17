@@ -1,11 +1,11 @@
-from level import Level
-from search import depth_first_search, BlueprintSearchProblem
-from util import ROOM_CHAR
+from game.level import Level
+from game.search import depth_first_search, BlueprintSearchProblem
+from game.util import ROOM_CHAR, LEVEL1
 
 
 def test_expand_on_elevator():
     level = Level()
-    level._load_layout('level1.txt')
+    level._load_layout(LEVEL1)
     level._add_border_to_layout()
     start_node = (12, 4)  # row, col
     problem = BlueprintSearchProblem(level.layout, start_node, ROOM_CHAR)
@@ -16,7 +16,7 @@ def test_expand_on_elevator():
 
 def test_depth_first_search_on_elevator():
     level = Level()
-    level._load_layout('level1.txt')
+    level._load_layout(LEVEL1)
     level._add_border_to_layout()
     start_node = (13, 4)
     problem = BlueprintSearchProblem(level.layout, start_node, ROOM_CHAR)

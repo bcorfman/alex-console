@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from util import Perimeter
+from .util import Perimeter
 
 
 @dataclass

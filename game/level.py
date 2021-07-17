@@ -1,7 +1,7 @@
-from room import Room
-from util import location_ordering, ROW_LENGTH, Perimeter
-from search import depth_first_search, BlueprintSearchProblem
-from chartypes import ROOM_CHAR, HALLWAY_CHAR
+from .room import Room
+from .util import location_ordering, ROW_LENGTH, Perimeter
+from .search import depth_first_search, BlueprintSearchProblem
+from .chartypes import ROOM_CHAR, HALLWAY_CHAR
 
 
 class Level:

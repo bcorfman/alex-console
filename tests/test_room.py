@@ -1,9 +1,10 @@
-from level import Level
+from game.level import Level
+from game.util import LEVEL1
 
 
 def test_elevator_exits():
     level = Level()
-    level._load_layout('level1.txt')
+    level._load_layout(LEVEL1)
     level._add_border_to_layout()
     level._find_elevators()
     elevator1 = level.elevators[0]
@@ -13,7 +14,7 @@ def test_elevator_exits():
 
 def test_find_rooms():
     level = Level()
-    level._load_layout('level1.txt')
+    level._load_layout(LEVEL1)
     level._add_border_to_layout()
     level._find_elevators()
     level._find_rooms()

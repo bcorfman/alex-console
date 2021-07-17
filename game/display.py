@@ -1,5 +1,5 @@
 from blessed import Terminal
-from chartypes import ROOM_CHAR, HALLWAY_CHAR
+from .chartypes import ROOM_CHAR, HALLWAY_CHAR
 
 
 class Console:
@@ -25,8 +25,8 @@ class Console:
 
 
 if __name__ == '__main__':
-    from level import Level
+    from .level import Level
 
-    level1 = Level('level1.txt')
+    level1 = Level(r'levels\level1.txt')
     console = Console(level1)
     console.display()

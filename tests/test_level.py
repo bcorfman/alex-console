@@ -1,24 +1,24 @@
-from level import Level, Perimeter
-from util import location_ordering, ROOM_CHAR
-from search import depth_first_search, BlueprintSearchProblem
+from game.level import Level, Perimeter
+from game.util import location_ordering, ROOM_CHAR, LEVEL1
+from game.search import depth_first_search, BlueprintSearchProblem
 
 
 def test_load_layout():
     level = Level()
-    level._load_layout('level1.txt')
+    level._load_layout(LEVEL1)
     assert (level.layout[1][30] == 'C')
 
 
 def test_load_layout_and_add_border():
     level = Level()
-    level._load_layout('level1.txt')
+    level._load_layout(LEVEL1)
     level._add_border_to_layout()
     assert (level.layout[2][31] == 'C')
 
 
 def test_location_ordering():
     level = Level()
-    level._load_layout('level1.txt')
+    level._load_layout(LEVEL1)
     level._add_border_to_layout()
     start_node = (13, 4)
     problem = BlueprintSearchProblem(level.layout, start_node, ROOM_CHAR)
@@ -29,7 +29,7 @@ def test_location_ordering():
 
 def test_find_room_name():
     level = Level()
-    level._load_layout('level1.txt')
+    level._load_layout(LEVEL1)
     level._add_border_to_layout()
     p = Perimeter((1, 17), (3, 50))
     assert p.find_room_name(level.layout) == 'CARGO'
@@ -37,7 +37,7 @@ def test_find_room_name():
 
 def test_find_elevators():
     level = Level()
-    level._load_layout('level1.txt')
+    level._load_layout(LEVEL1)
     level._add_border_to_layout()
     level._find_elevators()
     elevator1, elevator2 = level.elevators[0], level.elevators[1]
@@ -48,12 +48,12 @@ def test_find_elevators():
 
 
 def test_initialize_level():
-    level = Level('level1.txt')
+    level = Level(LEVEL1)
     assert len(level.rooms) == 3 and len(level.elevators) == 2
 
 
 def test_hallways():
-    level = Level('level1.txt')
+    level = Level(LEVEL1)
     assert len(level.hallways) == 17
     assert frozenset([(2, i) for i in range(51, 57)]) in level.hallways
     assert frozenset([(2, 57)]) in level.hallways

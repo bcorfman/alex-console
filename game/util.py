@@ -1,7 +1,22 @@
+import sys
+import os
 from dataclasses import dataclass
-from chartypes import ROOM_CHAR
+from .chartypes import ROOM_CHAR
+
+# noinspection PyProtectedMember
+SYS__MEIPASS = sys._MEIPASS
+
+
+def get_cwd():
+    try:
+        wd = SYS__MEIPASS
+    except AttributeError:
+        wd = os.getcwd()
+    return wd
+
 
 ROW_LENGTH = 80
+LEVEL1 = os.path.join(get_cwd(), 'levels', 'level1.txt')
 
 
 @dataclass(frozen=True)
