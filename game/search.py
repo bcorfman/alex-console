@@ -1,67 +1,100 @@
 from collections import namedtuple
+from abc import ABC, abstractmethod
 
-SuccessorResults = namedtuple('SearchResults', ['nodes', 'outliers'])
 SearchResults = namedtuple('SearchResults', ['visited', 'entrances', 'hallways'])
 
 
-class BlueprintSearchProblem:
+class SearchProblem(ABC):
+    @abstractmethod
+    def getStartState(self):
+        """ Returns the start state for the search. """
+
+    @abstractmethod
+    def getSuccessors(self, state):
+        """ Given a search state, the agent must make a one or more individual moves from that state,
+          and return them as a list of successors. """
+
+    @abstractmethod
+    def storeResults(self, visited):
+        """ Once search is complete, use this method to store the results.
+        Visited nodes are passed in directly from graph_search, while other data generated in
+        getSuccessors should be stored as the problem is solved and stored during this method call. """
+
+    @abstractmethod
+    def foundGoalState(self, state):
+        """ Returns True if _goal state is found; False otherwise. """
+
+
+class BlueprintSearchProblem(SearchProblem):
     def __init__(self, grid, start_loc, search_char):
-        self.grid = grid
-        self.start_loc = start_loc
-        self.search_char = search_char
+        self._grid = grid
+        self.fringe = []
+        self._start_loc = start_loc
+        self._search_char = search_char
         self.hallways = set()
         self.rooms = []
-        self.search_locations = set()
+        self._search_locations = set()
+        self.room_entrances = set()
+        self._goal = None
+        self.visited = None
 
     def getStartState(self):
-        return self.start_loc
+        return self._start_loc
 
-    def getSuccessors(self, state, **kwargs) -> SuccessorResults:
+    def getSuccessors(self, state):
         nodes = []
-        fringe = []
+        self.fringe = []
         src_row, src_col = state
         valid_offsets = []
         for offset_row, offset_col in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             new_row, new_col = src_row + offset_row, src_col + offset_col
-            new_node = self.grid[new_row][new_col]
-            if new_node == self.search_char:
+            new_node = self._grid[new_row][new_col]
+            if new_node == self._search_char:
                 valid_offsets.append((offset_row, offset_col))
                 nodes.append((new_row, new_col))
             elif new_node != ' ':
-                fringe.append((new_row, new_col))
+                self.fringe.append((new_row, new_col))
         cross_junction = len(valid_offsets) == 4
         t_or_corner_junction = (len(valid_offsets) > 1 and
                                 (sum([row for row, _ in valid_offsets]) != 0 or
                                  sum([col for _, col in valid_offsets]) != 0))
         dead_end = len(valid_offsets) == 1 and self.getStartState() != (src_row, src_col)
         if cross_junction or t_or_corner_junction:
-            self.hallways.add(frozenset(self.search_locations))
+            self.hallways.add(frozenset(self._search_locations))
             self.hallways.add(frozenset([(src_row, src_col)]))
-            self.search_locations.clear()
+            self._search_locations.clear()
         elif dead_end:
-            self.search_locations.add((src_row, src_col))
-            self.hallways.add(frozenset(self.search_locations))
-            self.search_locations.clear()
+            self._search_locations.add((src_row, src_col))
+            self.hallways.add(frozenset(self._search_locations))
+            self._search_locations.clear()
         elif state == self.getStartState() or not t_or_corner_junction:
-            self.search_locations.add(state)
+            self._search_locations.add(state)
         else:
             raise ValueError('unrecognized junction type')
-        return SuccessorResults(nodes=nodes, outliers=fringe)
+        return nodes
+
+    def foundGoalState(self, state):
+        return state == self._goal
+
+    def storeResults(self, visited_nodes):
+        self.visited = visited_nodes
+        for outlier in self.fringe:
+            if outlier not in self.room_entrances:
+                self.room_entrances.add(outlier)
 
 
-def depth_first_search(problem: BlueprintSearchProblem, **kwargs) -> SearchResults:
-    frontier = [problem.getStartState()]
+def graph_search(problem, frontier):
+    found_goal = False
+    frontier.add(problem.getStartState())
     visited = set()
-    room_entrances = set()
     while frontier:
         state = frontier.pop()
+        if problem.foundGoalState(state):
+            problem.storeResults(visited)
+            found_goal = True
         visited.add(state)
-        results = problem.getSuccessors(state, **kwargs)
-        for node in results.nodes:
+        nodes = problem.getSuccessors(state)
+        for node in nodes:
             if node not in visited:
                 frontier.append(node)
-        for outlier in results.outliers:
-            if outlier not in room_entrances:
-                room_entrances.add(outlier)
-    return SearchResults(visited=list(visited), entrances=list(room_entrances),
-                         hallways=list(problem.hallways))
+    return found_goal
