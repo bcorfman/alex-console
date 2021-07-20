@@ -1,6 +1,6 @@
 from game.level import Level, Perimeter
-from game.util import location_ordering, ROOM_CHAR, LEVEL1
-from game.search import depth_first_search, BlueprintSearchProblem
+from game.util import location_ordering, ROOM_CHAR, LEVEL1, Stack
+from game.search import graph_search, BlueprintSearchProblem
 
 
 def test_load_layout():
@@ -22,7 +22,7 @@ def test_location_ordering():
     level._add_border_to_layout()
     start_node = (13, 4)
     problem = BlueprintSearchProblem(level.layout, start_node, ROOM_CHAR)
-    results = depth_first_search(problem)
+    results = graph_search(problem, Stack())
     assert ((12, 4) == min(results.visited, key=location_ordering))
     assert ((14, 11) == max(results.visited, key=location_ordering))
 
