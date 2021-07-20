@@ -1,6 +1,6 @@
 from game.level import Level
-from game.search import depth_first_search, BlueprintSearchProblem
-from game.util import ROOM_CHAR, LEVEL1
+from game.search import graph_search, BlueprintSearchProblem
+from game.util import ROOM_CHAR, LEVEL1, Stack
 
 
 def test_expand_on_elevator():
@@ -20,5 +20,5 @@ def test_depth_first_search_on_elevator():
     level._add_border_to_layout()
     start_node = (13, 4)
     problem = BlueprintSearchProblem(level.layout, start_node, ROOM_CHAR)
-    results = depth_first_search(problem)
+    results = graph_search(problem, Stack())
     assert (12, 6) in results.visited and (14, 11) in results.visited
