@@ -1,6 +1,6 @@
 from .room import Room
 from .util import location_ordering, ROW_LENGTH, Perimeter, Stack
-from .search import graph_search, BlueprintSearchProblem
+from .search import complete_search, BlueprintSearchProblem
 from .chartypes import ROOM_CHAR, HALLWAY_CHAR
 
 
@@ -34,9 +34,9 @@ class Level:
             for col in range(col_length):
                 if r_item[col:col + 4].upper() == 'ELEV':
                     problem = BlueprintSearchProblem(self.layout, (row, col - 2), ROOM_CHAR)
-                    results = graph_search(problem, Stack())
-                    p = Perimeter(min(results.visited, key=location_ordering),
-                                  max(results.visited, key=location_ordering))
+                    complete_search(problem, Stack())
+                    p = Perimeter(min(problem.visited, key=location_ordering),
+                                  max(problem.visited, key=location_ordering))
                     exits = self._identify_room_exits(p)
                     self.elevators.append(Room('ELEVATOR', p, exits))
 
@@ -76,15 +76,15 @@ class Level:
         # pick first exit of each elevator as a starting point for search
         for elevator in self.elevators:
             problem = BlueprintSearchProblem(self.layout, elevator.exits[0], HALLWAY_CHAR)
-            results = graph_search(problem, Stack())
-            locations, room_entrances = results.visited, results.entrances
-            self.hallways.extend(results.hallways)
+            complete_search(problem, Stack())
+            locations, room_entrances = problem.visited, problem.room_entrances
+            self.hallways.extend(problem.hallways)
             # Collect information on each new room. Don't consider rooms that have already been found.
             for entrance in room_entrances:
                 problem = BlueprintSearchProblem(self.layout, entrance, ROOM_CHAR)
-                results = graph_search(problem, Stack())
-                p = Perimeter(min(results.visited, key=location_ordering),
-                              max(results.visited, key=location_ordering))
+                complete_search(problem, Stack())
+                p = Perimeter(min(problem.visited, key=location_ordering),
+                              max(problem.visited, key=location_ordering))
                 if p not in perimeters_found:
                     name = p.find_room_name(self.layout)
                     exits = self._identify_room_exits(p)

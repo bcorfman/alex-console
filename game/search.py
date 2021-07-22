@@ -21,7 +21,7 @@ class SearchProblem(ABC):
         getSuccessors should be stored as the problem is solved and stored during this method call. """
 
     @abstractmethod
-    def foundGoalState(self, state):
+    def isGoalState(self, state):
         """ Returns True if _goal state is found; False otherwise. """
 
 
@@ -43,7 +43,6 @@ class BlueprintSearchProblem(SearchProblem):
 
     def getSuccessors(self, state):
         nodes = []
-        self.fringe = []
         src_row, src_col = state
         valid_offsets = []
         for offset_row, offset_col in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
@@ -73,8 +72,8 @@ class BlueprintSearchProblem(SearchProblem):
             raise ValueError('unrecognized junction type')
         return nodes
 
-    def foundGoalState(self, state):
-        return state == self._goal
+    def isGoalState(self, state):
+        return NotImplementedError
 
     def storeResults(self, visited_nodes):
         self.visited = visited_nodes
@@ -83,18 +82,34 @@ class BlueprintSearchProblem(SearchProblem):
                 self.room_entrances.add(outlier)
 
 
-def graph_search(problem, frontier):
-    found_goal = False
-    frontier.add(problem.getStartState())
+def complete_search(problem, frontier):
+    """ Search until all nodes have been expanded, then return results. """
+    frontier.push(problem.getStartState())
     visited = set()
-    while frontier:
+    while not frontier.isEmpty():
         state = frontier.pop()
-        if problem.foundGoalState(state):
-            problem.storeResults(visited)
-            found_goal = True
         visited.add(state)
         nodes = problem.getSuccessors(state)
         for node in nodes:
             if node not in visited:
-                frontier.append(node)
+                frontier.push(node)
+    problem.storeResults(visited)
+
+
+def graph_search(problem, frontier):
+    found_goal = False
+    frontier.push(problem.getStartState())
+    visited = set()
+    while not frontier.isEmpty():
+        state = frontier.pop()
+        if problem.isGoalState(state, frontier):
+            problem.storeResults(visited)
+            found_goal = True
+            break
+        if state not in visited:
+            visited.add(state)
+            nodes = problem.getSuccessors(state)
+            for node in nodes:
+                if node not in visited:
+                    visited.add(node)
     return found_goal
