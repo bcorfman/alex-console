@@ -1,6 +1,6 @@
 from .room import Room
-from .util import location_ordering, ROW_LENGTH, Perimeter, Stack
-from .search import complete_search, BlueprintSearchProblem
+from .util import location_ordering, ROW_LENGTH, Perimeter
+from .search import exhaustive_search, HallwayConstructionProblem
 from .chartypes import ROOM_CHAR, HALLWAY_CHAR
 
 
@@ -33,8 +33,8 @@ class Level:
             col_length = len(r_item) - 3
             for col in range(col_length):
                 if r_item[col:col + 4].upper() == 'ELEV':
-                    problem = BlueprintSearchProblem(self.layout, (row, col - 2), ROOM_CHAR)
-                    complete_search(problem, Stack())
+                    problem = HallwayConstructionProblem(self.layout, (row, col - 2), ROOM_CHAR)
+                    exhaustive_search(problem)
                     p = Perimeter(min(problem.visited, key=location_ordering),
                                   max(problem.visited, key=location_ordering))
                     exits = self._identify_room_exits(p)
@@ -75,14 +75,14 @@ class Level:
             perimeters_found.add(elevator.perimeter)
         # pick first exit of each elevator as a starting point for search
         for elevator in self.elevators:
-            problem = BlueprintSearchProblem(self.layout, elevator.exits[0], HALLWAY_CHAR)
-            complete_search(problem, Stack())
+            problem = HallwayConstructionProblem(self.layout, elevator.exits[0], HALLWAY_CHAR)
+            exhaustive_search(problem)
             locations, room_entrances = problem.visited, problem.room_entrances
             self.hallways.extend(problem.hallways)
             # Collect information on each new room. Don't consider rooms that have already been found.
             for entrance in room_entrances:
-                problem = BlueprintSearchProblem(self.layout, entrance, ROOM_CHAR)
-                complete_search(problem, Stack())
+                problem = HallwayConstructionProblem(self.layout, entrance, ROOM_CHAR)
+                exhaustive_search(problem)
                 p = Perimeter(min(problem.visited, key=location_ordering),
                               max(problem.visited, key=location_ordering))
                 if p not in perimeters_found:

@@ -51,6 +51,9 @@ class Stack:
     def __init__(self):
         self.list = []
 
+    def __iter__(self):
+        return self.list.__iter__()
+
     def push(self, item):
         """ Push 'item' onto the stack """
         self.list.append(item)
@@ -69,6 +72,9 @@ class Queue:
 
     def __init__(self):
         self.deque = deque()
+
+    def __iter__(self):
+        return self.deque.__iter__()
 
     def push(self, item):
         """ Enqueue the 'item' into the queue. """
