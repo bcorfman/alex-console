@@ -20,7 +20,7 @@ LEVEL1 = os.path.join(get_cwd(), 'levels', 'level1.txt')
 
 class Node:
     def __init__(self, state, actions=None, cost=None):
-        self.state = state
+        self.state = tuple(state)
         self.actions = actions or []
         self.cost = cost or 0
 
@@ -45,9 +45,8 @@ class Perimeter:
     def expand_border(self, amt=1):
         tl_row, tl_col = self.top_left.state
         br_row, br_col = self.bottom_right.state
-        new_tl = tl_row - amt, tl_col - amt
-        new_br = br_row + amt, br_col + amt
-        return Perimeter(Node(new_tl), Node(new_br))
+        return Perimeter(Node([tl_row - amt, tl_col - amt]),
+                         Node([br_row + amt, br_col + amt]))
 
     def find_room_name(self, layout):
         tl_row, tl_col = self.top_left.state
@@ -68,7 +67,6 @@ def node_ordering(node):
 # Data structures useful for implementing SearchAgents
 class Stack:
     """ A container with a last-in-first-out (LIFO) queuing policy. """
-
     def __init__(self):
         self.list = []
 
@@ -98,7 +96,6 @@ class Stack:
 
 class Queue:
     """ A container with a first-in-first-out (FIFO) queuing policy. """
-
     def __init__(self):
         self.deque = deque()
 

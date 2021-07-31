@@ -31,9 +31,7 @@ def test_find_room_name():
     level = Level()
     level._load_layout(LEVEL1)
     level._add_border_to_layout()
-    top_left_loc = (1, 17)
-    bottom_right_loc = (3, 50)
-    p = Perimeter(Node(top_left_loc), Node(bottom_right_loc))
+    p = Perimeter(Node([1, 17]), Node([3, 50]))
     assert p.find_room_name(level.layout) == 'CARGO'
 
 
@@ -43,14 +41,10 @@ def test_find_elevators():
     level._add_border_to_layout()
     level._find_elevators()
     elevator1, elevator2 = level.elevators[0], level.elevators[1]
-    top_left_loc = (1, 62)
-    bottom_right_loc = (3, 69)
-    assert (elevator1.name == 'ELEVATOR' and elevator1.perimeter.top_left == Node(top_left_loc) and
-            elevator1.perimeter.bottom_right == Node(bottom_right_loc))
-    top_left_loc = (12, 4)
-    bottom_right_loc = (14, 11)
-    assert (elevator2.name == 'ELEVATOR' and elevator2.perimeter.top_left == Node(top_left_loc) and
-            elevator2.perimeter.bottom_right == Node(bottom_right_loc))
+    assert (elevator1.name == 'ELEVATOR' and elevator1.perimeter.top_left == Node([1, 62]) and
+            elevator1.perimeter.bottom_right == Node([3, 69]))
+    assert (elevator2.name == 'ELEVATOR' and elevator2.perimeter.top_left == Node([12, 4]) and
+            elevator2.perimeter.bottom_right == Node([14, 11]))
 
 
 def test_initialize_level():
