@@ -18,19 +18,40 @@ ROW_LENGTH = 80
 LEVEL1 = os.path.join(get_cwd(), 'levels', 'level1.txt')
 
 
+class Node:
+    def __init__(self, state, actions=None, cost=None):
+        self.state = state
+        self.actions = actions or []
+        self.cost = cost or 0
+
+    def __eq__(self, other):
+        if isinstance(other, Node):
+            return self.state == other.state
+        elif isinstance(other, tuple):
+            return self.state == other
+
+    def __contains__(self, item):
+        return self.state == item.state
+
+    def __hash__(self):
+        return hash(self.state)
+
+
 @dataclass(frozen=True)
 class Perimeter:
-    top_left: tuple[int, int]
-    bottom_right: tuple[int, int]
+    top_left: Node
+    bottom_right: Node
 
     def expand_border(self, amt=1):
-        tl_row, tl_col = self.top_left
-        br_row, br_col = self.bottom_right
-        return Perimeter((tl_row - amt, tl_col - amt), (br_row + amt, br_col + amt))
+        tl_row, tl_col = self.top_left.state
+        br_row, br_col = self.bottom_right.state
+        new_tl = tl_row - amt, tl_col - amt
+        new_br = br_row + amt, br_col + amt
+        return Perimeter(Node(new_tl), Node(new_br))
 
     def find_room_name(self, layout):
-        tl_row, tl_col = self.top_left
-        br_row, br_col = self.bottom_right
+        tl_row, tl_col = self.top_left.state
+        br_row, br_col = self.bottom_right.state
         chars = []
         for r in range(tl_row, br_row + 1):
             for c in range(tl_col, br_col + 1):
@@ -39,8 +60,8 @@ class Perimeter:
         return ''.join(chars).strip()
 
 
-def location_ordering(loc):
-    loc_row, loc_col = loc
+def node_ordering(node):
+    loc_row, loc_col = node.state
     return loc_row * ROW_LENGTH + loc_col
 
 
@@ -51,19 +72,27 @@ class Stack:
     def __init__(self):
         self.list = []
 
-    def __iter__(self):
-        return self.list.__iter__()
+    def __getitem__(self, item):
+        return self.list[item]
 
-    def push(self, item):
-        """ Push 'item' onto the stack """
-        self.list.append(item)
+    def __delitem__(self, key):
+        del self.list[key]
+
+    def update(self, item):
+        """ Add the item into the queue if not there; otherwise,
+        update in place if cost is lower. """
+        if item not in self.list:
+            self.list.append(item)
+        else:
+            idx = self.list.index(item)
+            if item.cost < self.list[idx].cost:
+                self.list[idx] = item
 
     def pop(self):
         """ Pop the most recently pushed item from the stack """
         return self.list.pop()
 
     def isEmpty(self):
-        """ Returns true if the stack is empty """
         return len(self.list) == 0
 
 
@@ -73,22 +102,28 @@ class Queue:
     def __init__(self):
         self.deque = deque()
 
-    def __iter__(self):
-        return self.deque.__iter__()
+    def __getitem__(self, item):
+        return self.deque[item]
 
-    def push(self, item):
-        """ Enqueue the 'item' into the queue. """
-        self.deque.appendleft(item)
+    def __delitem__(self, key):
+        del self.deque[key]
+
+    def update(self, item):
+        """ Add the item into the queue if not there; otherwise,
+        update in place if cost is lower. """
+        if item not in self.deque:
+            self.deque.appendleft(item)
+        else:
+            idx = self.deque.index(item)
+            if item.cost < self.deque[idx].cost:
+                self.deque[idx] = item
 
     def pop(self):
-        """
-          Dequeue the earliest enqueued item still in the queue. This
-          operation removes the item from the queue.
-        """
+        """ Dequeue the earliest enqueued item still in the queue. This
+          operation removes the item from the queue. """
         return self.deque.pop()
 
     def isEmpty(self):
-        """ Returns true if the queue is empty. """
         return len(self.deque) == 0
 
 

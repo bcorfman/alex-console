@@ -1,27 +1,14 @@
 from abc import ABC, abstractmethod
-from .util import Stack
-
-
-class Node:
-    def __init__(self, state, actions, cost):
-        self.state = state
-        self.actions = actions
-        self.cost = cost
-
-    def __eq__(self, other):
-        return self.state == other.state
-
-    def __hash__(self):
-        return hash(self.state)
+from .util import Stack, Node
 
 
 class SearchProblem(ABC):
     @abstractmethod
-    def getStartState(self):
+    def getStartNode(self):
         """ Returns the start state for the search. """
 
     @abstractmethod
-    def isGoal(self, state, frontier):
+    def isGoal(self, node):
         """ Returns True if _goal state is found; False otherwise. """
 
     @abstractmethod
@@ -40,37 +27,36 @@ class SearchProblem(ABC):
 
 
 class BlueprintSearchProblem(SearchProblem):
-    def __init__(self, grid, start_loc, goal_loc):
+    def __init__(self, grid, start_node, goal_node):
         self._grid = grid
-        self._start_loc = start_loc
-        self._goal_loc = goal_loc
+        self._start_node = start_node
+        self._goal_node = goal_node
         self.actions = []
 
-    def getStartState(self):
-        return self._start_loc, (), 0
+    def getStartNode(self):
+        return self._start_node
 
-    def isGoal(self, node, _):
-        return node == self._goal_loc
+    def isGoal(self, node):
+        return node == self._goal_node
 
-    def storeResults(self, actions):
-        self.actions = list(actions)
+    def storeResults(self, node):
+        self.actions = list(node.actions)
 
-    def getSuccessors(self, state):
+    def getSuccessors(self, node):
         nodes = []
-        src_row, src_col = state
+        src_row, src_col = node.state
         for offset_row, offset_col in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-            new_row, new_col = src_row + offset_row, src_col + offset_col
-            new_node = self._grid[new_row][new_col]
-            if new_node != ' ':
-                nodes.append((new_row, new_col))
+            new_loc = new_row, new_col = src_row + offset_row, src_col + offset_col
+            if self._grid[new_row][new_col] != ' ':
+                nodes.append(Node(new_loc, node.actions + [new_loc], node.cost + 1))
         return nodes
 
 
 class HallwayConstructionProblem(SearchProblem):
-    def __init__(self, grid, start_loc, search_char):
+    def __init__(self, grid, start_node, search_char):
         self._grid = grid
         self.fringe = []
-        self._start_loc = start_loc
+        self._start_node = start_node
         self._search_char = search_char
         self.hallways = set()
         self.rooms = []
@@ -79,41 +65,41 @@ class HallwayConstructionProblem(SearchProblem):
         self._goal = None
         self.visited = None
 
-    def getStartState(self):
-        return self._start_loc
+    def getStartNode(self):
+        return self._start_node
 
     def getSuccessors(self, node):
         nodes = []
-        src_row, src_col = node
+        src_row, src_col = node.state
         valid_offsets = []
         for offset_row, offset_col in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-            new_row, new_col = src_row + offset_row, src_col + offset_col
-            new_node = self._grid[new_row][new_col]
-            if new_node == self._search_char:
+            new_loc = new_row, new_col = src_row + offset_row, src_col + offset_col
+            if self._grid[new_row][new_col] == self._search_char:
                 valid_offsets.append((offset_row, offset_col))
-                nodes.append((new_row, new_col))
-            elif new_node != ' ':
-                self.fringe.append((new_row, new_col))
+                nodes.append(Node(new_loc, node.actions + [new_loc], node.cost + 1))
+            elif self._grid[new_row][new_col] != ' ':
+                self.fringe.append(new_loc)
         cross_junction = len(valid_offsets) == 4
         t_or_corner_junction = (len(valid_offsets) > 1 and
                                 (sum([row for row, _ in valid_offsets]) != 0 or
                                  sum([col for _, col in valid_offsets]) != 0))
-        dead_end = len(valid_offsets) == 1 and self.getStartState() != (src_row, src_col)
+        start_node = self.getStartNode()
+        dead_end = len(valid_offsets) == 1 and start_node.state != (src_row, src_col)
         if cross_junction or t_or_corner_junction:
             self.hallways.add(frozenset(self._search_locations))
-            self.hallways.add(frozenset([(src_row, src_col)]))
+            self.hallways.add(frozenset([node.state]))
             self._search_locations.clear()
         elif dead_end:
-            self._search_locations.add((src_row, src_col))
+            self._search_locations.add(node.state)
             self.hallways.add(frozenset(self._search_locations))
             self._search_locations.clear()
-        elif node == self.getStartState() or not t_or_corner_junction:
-            self._search_locations.add(node)
+        elif node == self.getStartNode() or not t_or_corner_junction:
+            self._search_locations.add(node.state)
         else:
             raise ValueError('unrecognized junction type')
         return nodes
 
-    def isGoal(self, node, _):
+    def isGoal(self, node):
         return NotImplementedError
 
     def storeResults(self, visited_nodes):
@@ -126,40 +112,31 @@ class HallwayConstructionProblem(SearchProblem):
 def exhaustive_search(problem):
     """ Search until all nodes have been expanded, then return results. """
     frontier = Stack()
-    frontier.push(problem.getStartState())
+    frontier.update(problem.getStartNode())
     visited = set()
     while not frontier.isEmpty():
         node = frontier.pop()
         visited.add(node)
         successors = problem.getSuccessors(node)
-        for s in successors:
-            if s not in visited and s not in frontier:
-                frontier.push(s)
+        for new_node in successors:
+            if new_node not in visited:
+                frontier.update(new_node)
     problem.storeResults(visited)
 
 
-def graph_search(problem, frontier):
+def graph_search(problem: SearchProblem, frontier):
     found_goal = False
-    frontier.push(problem.getStartState())
+    frontier.update(problem.getStartNode())
     visited = set()
     while not frontier.isEmpty():
-        state = frontier.pop()
-        node, actions, cost = state
-        if problem.isGoal(node, frontier):
-            problem.storeResults(actions)
+        node = frontier.pop()
+        if problem.isGoal(node):
+            problem.storeResults(node)
             found_goal = True
             break
-        if state not in visited:
-            visited.add(state)
+        if node not in visited:
+            visited.add(node)
             successors = problem.getSuccessors(node)
             for new_node in successors:
-                new_actions = actions + (new_node,)
-                new_cost = problem.getCostOfActions(new_actions)
-                if new_node not in visited:
-                    frontier.push((new_node, new_actions, new_cost))
-                elif new_node in frontier:
-                    incumbent = frontier[new_node]  # WHAT??
-                    if new_cost < cost:
-                        del frontier[incumbent]
-                        frontier.push((new_node, new_actions, new_cost))
+                frontier.update(new_node)
     return found_goal

@@ -1,5 +1,5 @@
 from .room import Room
-from .util import location_ordering, ROW_LENGTH, Perimeter
+from .util import node_ordering, ROW_LENGTH, Perimeter, Node
 from .search import exhaustive_search, HallwayConstructionProblem
 from .chartypes import ROOM_CHAR, HALLWAY_CHAR
 
@@ -33,10 +33,11 @@ class Level:
             col_length = len(r_item) - 3
             for col in range(col_length):
                 if r_item[col:col + 4].upper() == 'ELEV':
-                    problem = HallwayConstructionProblem(self.layout, (row, col - 2), ROOM_CHAR)
+                    loc = (row, col - 2)
+                    problem = HallwayConstructionProblem(self.layout, Node(loc), ROOM_CHAR)
                     exhaustive_search(problem)
-                    p = Perimeter(min(problem.visited, key=location_ordering),
-                                  max(problem.visited, key=location_ordering))
+                    p = Perimeter(min(problem.visited, key=node_ordering),
+                                  max(problem.visited, key=node_ordering))
                     exits = self._identify_room_exits(p)
                     self.elevators.append(Room('ELEVATOR', p, exits))
 
@@ -58,8 +59,8 @@ class Level:
 
     def _identify_room_exits(self, room_perimeter):
         new_perimeter = room_perimeter.expand_border()
-        tl_row, tl_col = new_perimeter.top_left
-        br_row, br_col = new_perimeter.bottom_right
+        tl_row, tl_col = new_perimeter.top_left.state
+        br_row, br_col = new_perimeter.bottom_right.state
         exits = [self._search_for_exit_in_row(tl_row, tl_col, br_col + 1),
                  self._search_for_exit_in_row(br_row, tl_col, br_col + 1),
                  self._search_for_exit_in_col(tl_col, tl_row, br_row + 1),
@@ -75,16 +76,16 @@ class Level:
             perimeters_found.add(elevator.perimeter)
         # pick first exit of each elevator as a starting point for search
         for elevator in self.elevators:
-            problem = HallwayConstructionProblem(self.layout, elevator.exits[0], HALLWAY_CHAR)
+            problem = HallwayConstructionProblem(self.layout, Node(elevator.exits[0]), HALLWAY_CHAR)
             exhaustive_search(problem)
             locations, room_entrances = problem.visited, problem.room_entrances
             self.hallways.extend(problem.hallways)
             # Collect information on each new room. Don't consider rooms that have already been found.
             for entrance in room_entrances:
-                problem = HallwayConstructionProblem(self.layout, entrance, ROOM_CHAR)
+                problem = HallwayConstructionProblem(self.layout, Node(entrance), ROOM_CHAR)
                 exhaustive_search(problem)
-                p = Perimeter(min(problem.visited, key=location_ordering),
-                              max(problem.visited, key=location_ordering))
+                p = Perimeter(min(problem.visited, key=node_ordering),
+                              max(problem.visited, key=node_ordering))
                 if p not in perimeters_found:
                     name = p.find_room_name(self.layout)
                     exits = self._identify_room_exits(p)

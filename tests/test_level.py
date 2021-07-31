@@ -1,6 +1,6 @@
 from game.level import Level, Perimeter
-from game.util import location_ordering, ROOM_CHAR, LEVEL1
-from game.search import exhaustive_search, HallwayConstructionProblem
+from game.util import node_ordering, ROOM_CHAR, LEVEL1
+from game.search import exhaustive_search, HallwayConstructionProblem, Node
 
 
 def test_load_layout():
@@ -20,18 +20,20 @@ def test_location_ordering():
     level = Level()
     level._load_layout(LEVEL1)
     level._add_border_to_layout()
-    start_node = (13, 4)
-    problem = HallwayConstructionProblem(level.layout, start_node, ROOM_CHAR)
+    start_loc = (13, 4)
+    problem = HallwayConstructionProblem(level.layout, Node(start_loc), ROOM_CHAR)
     exhaustive_search(problem)
-    assert ((12, 4) == min(problem.visited, key=location_ordering))
-    assert ((14, 11) == max(problem.visited, key=location_ordering))
+    assert ((12, 4) == min(problem.visited, key=node_ordering))
+    assert ((14, 11) == max(problem.visited, key=node_ordering))
 
 
 def test_find_room_name():
     level = Level()
     level._load_layout(LEVEL1)
     level._add_border_to_layout()
-    p = Perimeter((1, 17), (3, 50))
+    top_left_loc = (1, 17)
+    bottom_right_loc = (3, 50)
+    p = Perimeter(Node(top_left_loc), Node(bottom_right_loc))
     assert p.find_room_name(level.layout) == 'CARGO'
 
 
@@ -41,10 +43,14 @@ def test_find_elevators():
     level._add_border_to_layout()
     level._find_elevators()
     elevator1, elevator2 = level.elevators[0], level.elevators[1]
-    assert (elevator1.name == 'ELEVATOR' and elevator1.perimeter.top_left == (1, 62) and
-            elevator1.perimeter.bottom_right == (3, 69))
-    assert (elevator2.name == 'ELEVATOR' and elevator2.perimeter.top_left == (12, 4) and
-            elevator2.perimeter.bottom_right == (14, 11))
+    top_left_loc = (1, 62)
+    bottom_right_loc = (3, 69)
+    assert (elevator1.name == 'ELEVATOR' and elevator1.perimeter.top_left == Node(top_left_loc) and
+            elevator1.perimeter.bottom_right == Node(bottom_right_loc))
+    top_left_loc = (12, 4)
+    bottom_right_loc = (14, 11)
+    assert (elevator2.name == 'ELEVATOR' and elevator2.perimeter.top_left == Node(top_left_loc) and
+            elevator2.perimeter.bottom_right == Node(bottom_right_loc))
 
 
 def test_initialize_level():

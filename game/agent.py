@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
+from .level import Level
 
 
 @dataclass
@@ -13,6 +14,7 @@ class Agent(ABC):
     name: str
     velocity: int  # cells per second
     location: Loc
+    parent: Level
 
     @abstractmethod
     def moveTo(self, pos: Loc):
