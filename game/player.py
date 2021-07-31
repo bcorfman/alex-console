@@ -11,5 +11,5 @@ class Player(Agent):
             actions.extend(problem.actions)
         return actions
 
-    def update(self):
+    def update(self, t):
         pass

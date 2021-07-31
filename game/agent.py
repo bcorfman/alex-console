@@ -23,7 +23,7 @@ class Agent(ABC):
         Returns True if a path is found; False otherwise"""
 
     @abstractmethod
-    def update(self):
+    def update(self, t):
         """ Should be called during each iteration of the game loop to update the position
-        of the agent.
+        of the agent. t is the delta time in seconds that has passed.
         Return None."""
