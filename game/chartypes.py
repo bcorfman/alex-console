@@ -1,2 +1,7 @@
+PLAYER_CHARS = ['!', '@', '#', '$', '^']
 HALLWAY_CHAR = '~'
+HALLWAY_CHARS = PLAYER_CHARS + [HALLWAY_CHAR]
 ROOM_CHAR = '█'
+ROOM_CHARS = PLAYER_CHARS + [ROOM_CHAR]
+PLAYER_CHARS = ['!', '@', '#', '$', '^']
+CROSS_HAIR_CHAR = '\u2316'

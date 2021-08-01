@@ -3,7 +3,7 @@ import os
 import heapq
 from collections import deque
 from dataclasses import dataclass
-from .chartypes import ROOM_CHAR
+from .chartypes import ROOM_CHARS
 
 
 def get_cwd():
@@ -14,8 +14,11 @@ def get_cwd():
     return wd
 
 
+GAME_TICKS_PER_SECOND = 20
+GAME_TICK = 1.0 / GAME_TICKS_PER_SECOND
 ROW_LENGTH = 80
 LEVEL1 = os.path.join(get_cwd(), 'levels', 'level1.txt')
+PLAYER1_NAME = 'Brandon'
 
 
 class Node:
@@ -54,7 +57,7 @@ class Perimeter:
         chars = []
         for r in range(tl_row, br_row + 1):
             for c in range(tl_col, br_col + 1):
-                if layout[r][c] != ROOM_CHAR:
+                if layout[r][c] not in ROOM_CHARS:
                     chars.append(layout[r][c])
         return ''.join(chars).strip()
 

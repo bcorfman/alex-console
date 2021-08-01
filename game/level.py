@@ -1,7 +1,9 @@
 from .room import Room
-from .util import node_ordering, ROW_LENGTH, Perimeter, Node
+from .util import node_ordering, ROW_LENGTH, Perimeter, Node, PLAYER1_NAME
 from .search import exhaustive_search, HallwayConstructionProblem
-from .chartypes import ROOM_CHAR, HALLWAY_CHAR
+from .chartypes import ROOM_CHARS, HALLWAY_CHARS, PLAYER_CHARS
+from .agent import Loc
+from .player import Player
 
 
 class Level:
@@ -10,11 +12,13 @@ class Level:
         self.rooms = []
         self.elevators = []
         self.layout = []
+        self.players = []
         if filename:
             self._load_layout(filename)
             self._add_border_to_layout()
             self._find_elevators()
             self._find_rooms()
+            self._find_players()
 
     def _load_layout(self, filename):
         with open(filename) as f:
@@ -34,7 +38,7 @@ class Level:
             for col in range(col_length):
                 if r_item[col:col + 4].upper() == 'ELEV':
                     loc = (row, col - 2)
-                    problem = HallwayConstructionProblem(self.layout, Node(loc), ROOM_CHAR)
+                    problem = HallwayConstructionProblem(self.layout, Node(loc), ROOM_CHARS)
                     exhaustive_search(problem)
                     p = Perimeter(min(problem.visited, key=node_ordering),
                                   max(problem.visited, key=node_ordering))
@@ -44,7 +48,7 @@ class Level:
     def _search_for_exit_in_row(self, row, start, end):
         exit_ = None
         for i in range(start, end):
-            if self.layout[row][i] == HALLWAY_CHAR:
+            if self.layout[row][i] in HALLWAY_CHARS:
                 exit_ = row, i
                 break
         return exit_
@@ -52,7 +56,7 @@ class Level:
     def _search_for_exit_in_col(self, col, start, end):
         exit_ = None
         for i in range(start, end):
-            if self.layout[i][col] == HALLWAY_CHAR:
+            if self.layout[i][col] in HALLWAY_CHARS:
                 exit_ = i, col
                 break
         return exit_
@@ -76,13 +80,13 @@ class Level:
             perimeters_found.add(elevator.perimeter)
         # pick first exit of each elevator as a starting point for search
         for elevator in self.elevators:
-            problem = HallwayConstructionProblem(self.layout, Node(elevator.exits[0]), HALLWAY_CHAR)
+            problem = HallwayConstructionProblem(self.layout, Node(elevator.exits[0]), HALLWAY_CHARS)
             exhaustive_search(problem)
             locations, room_entrances = problem.visited, problem.room_entrances
             self.hallways.extend(problem.hallways)
             # Collect information on each new room. Don't consider rooms that have already been found.
             for entrance in room_entrances:
-                problem = HallwayConstructionProblem(self.layout, Node(entrance), ROOM_CHAR)
+                problem = HallwayConstructionProblem(self.layout, Node(entrance), ROOM_CHARS)
                 exhaustive_search(problem)
                 p = Perimeter(min(problem.visited, key=node_ordering),
                               max(problem.visited, key=node_ordering))
@@ -91,3 +95,12 @@ class Level:
                     exits = self._identify_room_exits(p)
                     perimeters_found.add(p)
                     self.rooms.append(Room(name, p, exits))
+
+    def _find_players(self):
+        for r, row in enumerate(self.layout):
+            for c, col in enumerate(row):
+                if self.layout[r][c] in PLAYER_CHARS:
+                    self.players.append(Player(PLAYER1_NAME, 2, Loc(r, c), self))
+
+    def update(self):
+        pass

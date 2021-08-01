@@ -1,5 +1,6 @@
+from game.chartypes import ROOM_CHARS
 from game.level import Level, Perimeter
-from game.util import node_ordering, ROOM_CHAR, LEVEL1
+from game.util import node_ordering, LEVEL1
 from game.search import exhaustive_search, HallwayConstructionProblem, Node
 
 
@@ -21,7 +22,7 @@ def test_location_ordering():
     level._load_layout(LEVEL1)
     level._add_border_to_layout()
     start_loc = (13, 4)
-    problem = HallwayConstructionProblem(level.layout, Node(start_loc), ROOM_CHAR)
+    problem = HallwayConstructionProblem(level.layout, Node(start_loc), ROOM_CHARS)
     exhaustive_search(problem)
     assert ((12, 4) == min(problem.visited, key=node_ordering))
     assert ((14, 11) == max(problem.visited, key=node_ordering))
