@@ -14,8 +14,6 @@ def get_cwd():
     return wd
 
 
-GAME_TICKS_PER_SECOND = 20
-GAME_TICK = 1.0 / GAME_TICKS_PER_SECOND
 ROW_LENGTH = 80
 LEVEL1 = os.path.join(get_cwd(), 'levels', 'level1.txt')
 PLAYER1_NAME = 'Brandon'

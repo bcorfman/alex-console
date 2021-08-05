@@ -101,6 +101,3 @@ class Level:
             for c, col in enumerate(row):
                 if self.layout[r][c] in PLAYER_CHARS:
                     self.players.append(Player(PLAYER1_NAME, 2, Loc(r, c), self))
-
-    def update(self):
-        pass

@@ -9,5 +9,6 @@ def test_player():
     loc = level.rooms[0].exits[0]
     player = Player('Brandon', vel, loc, level)
     goal = level.rooms[1].exits[0]
-    assert (player.moveTo(goal) == [(10, i) for i in range(22, 4, -1)] +
-            [(i, 4) for i in range(10, 2, -1)] + [(2, i) for i in range(4, 17)])
+    assert (player.moveTo(goal) == [(2, i) for i in range(7, 1, -1)] +
+            [(i, 1) for i in range(2, 10)] +
+            [(10, i) for i in range(1, 18)])
