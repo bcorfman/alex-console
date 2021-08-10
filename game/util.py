@@ -25,6 +25,9 @@ class Node:
         self.actions = actions or []
         self.cost = cost or 0
 
+    def __repr__(self):
+        return f'Node({self.state}, {self.actions}, {self.cost})'
+
     def __eq__(self, other):
         if isinstance(other, Node):
             return self.state == other.state
@@ -68,8 +71,14 @@ def node_ordering(node):
 # Data structures useful for implementing SearchAgents
 class Stack:
     """ A container with a last-in-first-out (LIFO) queuing policy. """
-    def __init__(self):
-        self.list = []
+
+    def __init__(self, lst=None):
+        if lst is None:
+            lst = []
+        self.list = lst
+
+    def __repr__(self):
+        return f'Stack({self.list})'
 
     def __getitem__(self, item):
         return self.list[item]
@@ -97,8 +106,14 @@ class Stack:
 
 class Queue:
     """ A container with a first-in-first-out (FIFO) queuing policy. """
-    def __init__(self):
-        self.deque = deque()
+
+    def __init__(self, lst=None):
+        if lst is None:
+            lst = []
+        self.deque = deque(lst)
+
+    def __repr__(self):
+        return f'Queue({self.deque})'
 
     def __getitem__(self, item):
         return self.deque[item]
@@ -133,9 +148,13 @@ class PriorityQueue:
       data structure allows O(1) access to the lowest-priority item.
     """
 
-    def __init__(self):
-        self.heap = []
-        self.count = 0
+    def __init__(self, heap=None, count=None):
+        if heap is None:
+            lst = []
+        self.heap = heap
+        if count is None:
+            count = 0
+        self.count = count
 
     def push(self, item, priority):
         entry = (priority, self.count, item)
