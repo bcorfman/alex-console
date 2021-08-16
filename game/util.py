@@ -21,10 +21,20 @@ GAME_TICKS_PER_SECOND = 20
 GAME_TICK = 1.0 / GAME_TICKS_PER_SECOND
 
 
-@dataclass
+@dataclass(eq=False)
 class Loc:
     row: int
     col: int
+
+    def __iter__(self):
+        yield self.row
+        yield self.col
+
+    def __eq__(self, other):
+        if isinstance(other, Loc):
+            return self.row == other.row and self.col == other.col
+        else:
+            return self.row == other[0] and self.col == other[1]
 
 
 class Node:
@@ -131,7 +141,7 @@ class Queue:
         """ Add the item into the queue if not there; otherwise,
         update in place if cost is lower. """
         if item not in self.deque:
-            self.deque.appendleft(item)
+            self.deque.append(item)
         else:
             idx = self.deque.index(item)
             if item.cost < self.deque[idx].cost:
@@ -140,7 +150,7 @@ class Queue:
     def pop(self):
         """ Dequeue the earliest enqueued item still in the queue. This
           operation removes the item from the queue. """
-        return self.deque.pop()
+        return self.deque.popleft()
 
     def isEmpty(self):
         return len(self.deque) == 0

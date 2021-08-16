@@ -2,7 +2,7 @@ from .room import Room
 from .util import node_ordering, ROW_LENGTH, Perimeter, Node, PLAYER1_NAME, Loc
 from .search import exhaustive_search, HallwayConstructionProblem
 from .chartypes import ROOM_CHARS, HALLWAY_CHARS, PLAYER_CHARS
-from .agent import Player
+from .player import Player
 
 
 class Level:
