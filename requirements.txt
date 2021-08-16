@@ -1,0 +1,2 @@
+blessed
+windows-curses; platform_system == 'windows'

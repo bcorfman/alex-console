@@ -1,9 +1,8 @@
 from .room import Room
-from .util import node_ordering, ROW_LENGTH, Perimeter, Node, PLAYER1_NAME
+from .util import node_ordering, ROW_LENGTH, Perimeter, Node, PLAYER1_NAME, Loc
 from .search import exhaustive_search, HallwayConstructionProblem
 from .chartypes import ROOM_CHARS, HALLWAY_CHARS, PLAYER_CHARS
-from .agent import Loc
-from .player import Player
+from .agent import Player
 
 
 class Level:
@@ -100,4 +99,19 @@ class Level:
         for r, row in enumerate(self.layout):
             for c, col in enumerate(row):
                 if self.layout[r][c] in PLAYER_CHARS:
-                    self.players.append(Player(PLAYER1_NAME, 2, Loc(r, c), self))
+                    self.players.append(Player(name=PLAYER1_NAME, velocity=2, location=Loc(r, c), parent=self))
+
+    def check_for_player(self, loc: Loc):
+        found_player = None
+        for player in self.players:
+            if player.location == loc:
+                found_player = player
+        return found_player
+
+    def is_valid_map_location(self, loc: Loc):
+        return self.layout[loc.row][loc.col] != ' '
+
+    async def update(self):
+        for player in self.players:
+            player.update()
+        return True

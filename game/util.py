@@ -17,6 +17,14 @@ def get_cwd():
 ROW_LENGTH = 80
 LEVEL1 = os.path.join(get_cwd(), 'levels', 'level1.txt')
 PLAYER1_NAME = 'Brandon'
+GAME_TICKS_PER_SECOND = 20
+GAME_TICK = 1.0 / GAME_TICKS_PER_SECOND
+
+
+@dataclass
+class Loc:
+    row: int
+    col: int
 
 
 class Node:
@@ -49,8 +57,8 @@ class Perimeter:
     def expand_border(self, amt=1):
         tl_row, tl_col = self.top_left.state
         br_row, br_col = self.bottom_right.state
-        return Perimeter(Node([tl_row - amt, tl_col - amt]),
-                         Node([br_row + amt, br_col + amt]))
+        return Perimeter(Node((tl_row - amt, tl_col - amt)),
+                         Node((br_row + amt, br_col + amt)))
 
     def find_room_name(self, layout):
         tl_row, tl_col = self.top_left.state
@@ -71,7 +79,6 @@ def node_ordering(node):
 # Data structures useful for implementing SearchAgents
 class Stack:
     """ A container with a last-in-first-out (LIFO) queuing policy. """
-
     def __init__(self, lst=None):
         if lst is None:
             lst = []
@@ -106,7 +113,6 @@ class Stack:
 
 class Queue:
     """ A container with a first-in-first-out (FIFO) queuing policy. """
-
     def __init__(self, lst=None):
         if lst is None:
             lst = []
@@ -150,7 +156,7 @@ class PriorityQueue:
 
     def __init__(self, heap=None, count=None):
         if heap is None:
-            lst = []
+            heap = []
         self.heap = heap
         if count is None:
             count = 0

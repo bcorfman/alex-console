@@ -1,14 +1,8 @@
 import asyncio
 import curses
-from concurrent.futures import ProcessPoolExecutor
-from blessed import Terminal
-from game.util import LEVEL1
-from game.level import Level
+from game.util import LEVEL1, GAME_TICK
+from game.level import Level, Loc
 from game.display import Console
-from game.search import BlueprintSearchProblem, graph_search
-
-GAME_TICKS_PER_SECOND = 20
-GAME_TICK = 1.0 / GAME_TICKS_PER_SECOND
 
 
 class LeftButtonPressed:
@@ -34,22 +28,28 @@ class LeftButtonPressed:
 
 class Game:
     def __init__(self):
-        self.term = Terminal()
-        self.console = Console(Level(LEVEL1), self.term)
+        self.level = Level(LEVEL1)
+        self.console = Console(self.level)
+        self.selected_player = None
 
     async def event_loop(self, scr):
-        row, col = None, None
         self.console.display()
         while True:
-            pressed = False
             c = scr.getch()
-            if c == self.term.KEY_MOUSE:
-                pressed = True
+            if c == curses.KEY_MOUSE:
                 _, col, row, _, _ = curses.getmouse()
+                cursor_loc = Loc(row, col)
+                player = self.level.check_for_player(cursor_loc)
+                if player:
+                    self.selected_player = player
+                else:
+                    if self.selected_player and self.level.is_valid_map_location(cursor_loc):
+                        await self.selected_player.moveTo(cursor_loc)
             elif c == ord('q'):
                 break
+            await self.level.update()
+            self.console.update()
             await asyncio.sleep(GAME_TICK)
-            self.console.update(row, col, pressed)
 
 
 async def main():

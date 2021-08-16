@@ -125,18 +125,18 @@ def exhaustive_search(problem):
 
 
 def graph_search(problem: SearchProblem, frontier):
-    found_goal = False
+    result = None
     frontier.update(problem.getStartNode())
     visited = set()
     while not frontier.isEmpty():
         node = frontier.pop()
         if problem.isGoal(node):
             problem.storeResults(node)
-            found_goal = True
+            result = problem
             break
-        if node not in visited:
-            visited.add(node)
+        if node.state not in visited:
+            visited.add(node.state)
             successors = problem.getSuccessors(node)
             for new_node in successors:
                 frontier.update(new_node)
-    return found_goal
+    return result
