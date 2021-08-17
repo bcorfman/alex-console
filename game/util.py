@@ -3,11 +3,13 @@ import os
 import heapq
 from collections import deque
 from dataclasses import dataclass
-from .chartypes import ROOM_CHARS
+from .chartypes import ROOM_CHAR
 
 
 def get_cwd():
     try:
+        # noinspection PyUnresolvedReferences
+        # noinspection PyProtectedMember
         wd = sys._MEIPASS
     except AttributeError:
         wd = os.getcwd()
@@ -35,6 +37,9 @@ class Loc:
             return self.row == other.row and self.col == other.col
         else:
             return self.row == other[0] and self.col == other[1]
+
+    def __hash__(self):
+        return hash((self.row, self.col))
 
 
 class Node:
@@ -76,7 +81,7 @@ class Perimeter:
         chars = []
         for r in range(tl_row, br_row + 1):
             for c in range(tl_col, br_col + 1):
-                if layout[r][c] not in ROOM_CHARS:
+                if layout[r][c] != ROOM_CHAR:
                     chars.append(layout[r][c])
         return ''.join(chars).strip()
 

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .util import Stack, Node
+from .util import Stack, Node, Loc
 
 
 class SearchProblem(ABC):
@@ -46,18 +46,19 @@ class BlueprintSearchProblem(SearchProblem):
         nodes = []
         src_row, src_col = node.state
         for offset_row, offset_col in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-            new_loc = new_row, new_col = src_row + offset_row, src_col + offset_col
+            new_row, new_col = src_row + offset_row, src_col + offset_col
+            new_loc = Loc(new_row, new_col)
             if self._grid[new_row][new_col] != ' ':
                 nodes.append(Node(new_loc, node.actions + [new_loc], node.cost + 1))
         return nodes
 
 
 class HallwayConstructionProblem(SearchProblem):
-    def __init__(self, grid, start_node, search_chars):
+    def __init__(self, grid, start_node, search_char):
         self._grid = grid
         self.fringe = []
         self._start_node = start_node
-        self._search_chars = search_chars
+        self._search_char = search_char
         self.hallways = set()
         self.rooms = []
         self._search_locations = set()
@@ -73,8 +74,9 @@ class HallwayConstructionProblem(SearchProblem):
         src_row, src_col = node.state
         valid_offsets = []
         for offset_row, offset_col in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-            new_loc = new_row, new_col = src_row + offset_row, src_col + offset_col
-            if self._grid[new_row][new_col] in self._search_chars:
+            new_row, new_col = src_row + offset_row, src_col + offset_col
+            new_loc = Loc(new_row, new_col)
+            if self._grid[new_row][new_col] == self._search_char:
                 valid_offsets.append((offset_row, offset_col))
                 nodes.append(Node(new_loc, node.actions + [new_loc], node.cost + 1))
             elif self._grid[new_row][new_col] != ' ':

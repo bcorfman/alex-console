@@ -1,7 +1,8 @@
+# noinspection PyPackageRequirements
+import pytest
 from game.player import Player
 from game.level import Level
 from game.util import LEVEL1, Loc
-import pytest
 
 
 @pytest.mark.asyncio

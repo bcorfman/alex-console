@@ -1,5 +1,6 @@
 import asyncio
 import curses
+import logging
 from game.util import LEVEL1, GAME_TICK
 from game.level import Level, Loc
 from game.display import Console
@@ -30,7 +31,7 @@ class Game:
     def __init__(self):
         self.level = Level(LEVEL1)
         self.console = Console(self.level)
-        self.selected_player = None
+        self.selected_player = self.level.get_first_player()
 
     async def event_loop(self, scr):
         self.console.display()
@@ -52,7 +53,9 @@ class Game:
             await asyncio.sleep(GAME_TICK)
 
 
+# noinspection PyArgumentList
 async def main():
+    logging.basicConfig(filename='debug.txt', filemode='w', encoding='utf-8', level=logging.DEBUG)
     with LeftButtonPressed() as scr:
         game = Game()
         await game.event_loop(scr)
