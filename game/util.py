@@ -1,6 +1,7 @@
 import sys
 import os
 import heapq
+from blessed import Terminal
 from collections import deque
 from dataclasses import dataclass
 from .chartypes import ROOM_CHAR
@@ -15,6 +16,8 @@ def get_cwd():
         wd = os.getcwd()
     return wd
 
+
+term = Terminal()
 
 ROW_LENGTH = 80
 LEVEL1 = os.path.join(get_cwd(), 'levels', 'level1.txt')
@@ -40,6 +43,12 @@ class Loc:
 
     def __hash__(self):
         return hash((self.row, self.col))
+
+    @classmethod
+    def from_tuple(cls, t):
+        loc = cls.__new__(cls)
+        loc.row, loc.col = t
+        return loc
 
 
 class Node:
