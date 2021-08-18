@@ -1,7 +1,7 @@
 import asyncio
 import curses
 import logging
-from game.util import LEVEL1, GAME_TICK
+from game.util import LEVEL1, GAME_TICK, term
 from game.level import Level, Loc
 from game.display import Console
 
@@ -46,7 +46,7 @@ class Game:
                 else:
                     if self.selected_player and self.level.is_valid_map_location(cursor_loc):
                         await self.selected_player.moveTo(cursor_loc)
-                print(self.console.term.move_xy(col, row), end='', flush=True)  # moves cursor
+                print(term.move_xy(col, row), end='', flush=True)  # moves cursor
             elif c == ord('q'):
                 break
             await self.level.update()
