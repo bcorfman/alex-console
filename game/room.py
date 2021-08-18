@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
-from .util import Perimeter
+from .chartypes import ROOM_CHAR
+from .util import Perimeter, term
 from .player import Player
 
 
@@ -8,6 +9,8 @@ class Room:
     name: str
     perimeter: Perimeter
     exits: list[tuple] = field(default_factory=list)
+    mapChar: str = ROOM_CHAR
+    displayChar: str = term.tan_reverse(' ')
 
     def contains(self, player: Player):
         tl_row, tl_col = self.perimeter.top_left.state
