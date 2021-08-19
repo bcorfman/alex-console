@@ -30,12 +30,12 @@ def test_player_not_contained_in_room():
     level._find_rooms()
     # players on the initial level are in hallways, not in rooms.
     player = level.get_first_player()
-    player_in_room = False
+    inside = False
     for room in level.rooms:
-        if room.contains(player):
-            player_in_room = True
+        if player in room:
+            inside = True
             break
-    assert not player_in_room
+    assert not inside
 
 
 def test_player_contained_in_room():
@@ -47,11 +47,12 @@ def test_player_contained_in_room():
     level._find_rooms()
     player = level.get_first_player()
     # move player's location to the top left corner of the first room.
-    row, col = level.rooms[0].perimeter.top_left.state
+    top_left = level.rooms[0].perimeter.top_left
+    row, col = top_left.state.row, top_left.state.col
     player.location = Loc(row, col)
-    player_in_room = False
+    inside = False
     for room in level.rooms:
-        if room.contains(player):
-            player_in_room = True
+        if player in room:
+            inside = True
             break
-    assert player_in_room
+    assert inside

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from .util import Stack, Node, Loc
+from .hallway import Hallway
 
 
 class SearchProblem(ABC):
@@ -44,7 +45,7 @@ class BlueprintSearchProblem(SearchProblem):
 
     def getSuccessors(self, node):
         nodes = []
-        src_row, src_col = node.state
+        src_row, src_col = node.state.row, node.state.col
         for offset_row, offset_col in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             new_row, new_col = src_row + offset_row, src_col + offset_col
             new_loc = Loc(new_row, new_col)
@@ -71,7 +72,7 @@ class HallwayConstructionProblem(SearchProblem):
 
     def getSuccessors(self, node):
         nodes = []
-        src_row, src_col = node.state
+        src_row, src_col = node.state.row, node.state.col
         valid_offsets = []
         for offset_row, offset_col in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             new_row, new_col = src_row + offset_row, src_col + offset_col
@@ -88,12 +89,12 @@ class HallwayConstructionProblem(SearchProblem):
         start_node = self.getStartNode()
         dead_end = len(valid_offsets) == 1 and start_node.state != (src_row, src_col)
         if cross_junction or t_or_corner_junction:
-            self.hallways.add(frozenset(self._search_locations))
-            self.hallways.add(frozenset([node.state]))
+            self.hallways.add(Hallway(loc for loc in self._search_locations))
+            self.hallways.add(Hallway((node.state,)))
             self._search_locations.clear()
         elif dead_end:
             self._search_locations.add(node.state)
-            self.hallways.add(frozenset(self._search_locations))
+            self.hallways.add(Hallway(loc for loc in self._search_locations))
             self._search_locations.clear()
         elif node == self.getStartNode() or not t_or_corner_junction:
             self._search_locations.add(node.state)

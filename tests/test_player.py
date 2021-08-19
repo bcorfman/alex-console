@@ -21,9 +21,9 @@ async def test_player_move_to():
 @pytest.mark.asyncio
 async def test_player_update():
     level = Level(LEVEL1)
-    row, col = level.rooms[0].exits[0]
-    start_loc = Loc(row, col)
-    updated_loc = Loc(row, col - 1)
+    exit_row, exit_col = level.rooms[0].exits[0].row, level.rooms[0].exits[0].col
+    start_loc = Loc(exit_row, exit_col)
+    updated_loc = Loc(exit_row, exit_col - 1)
     player = Player(name='Brandon', location=start_loc, parent=level, velocity=2)
     player.numGameTicks = player.game_ticks_before_each_move + 1
     await player.moveTo(Loc(start_loc.row, start_loc.col - 2))

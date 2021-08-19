@@ -4,7 +4,6 @@ import heapq
 from blessed import Terminal
 from collections import deque
 from dataclasses import dataclass
-from .chartypes import ROOM_CHAR
 
 
 def get_cwd():
@@ -31,9 +30,9 @@ class Loc:
     row: int
     col: int
 
-    def __iter__(self):
-        yield self.row
-        yield self.col
+    # def __iter__(self):
+    #    yield self.row
+    #    yield self.col
 
     def __eq__(self, other):
         if isinstance(other, Loc):
@@ -53,7 +52,7 @@ class Loc:
 
 class Node:
     def __init__(self, state, actions=None, cost=None):
-        self.state = tuple(state)
+        self.state = state
         self.actions = actions or []
         self.cost = cost or 0
 
@@ -73,31 +72,8 @@ class Node:
         return hash(self.state)
 
 
-@dataclass(frozen=True)
-class Perimeter:
-    top_left: Node
-    bottom_right: Node
-
-    def expand_border(self, amt=1):
-        tl_row, tl_col = self.top_left.state
-        br_row, br_col = self.bottom_right.state
-        return Perimeter(Node((tl_row - amt, tl_col - amt)),
-                         Node((br_row + amt, br_col + amt)))
-
-    def find_room_name(self, layout):
-        tl_row, tl_col = self.top_left.state
-        br_row, br_col = self.bottom_right.state
-        chars = []
-        for r in range(tl_row, br_row + 1):
-            for c in range(tl_col, br_col + 1):
-                if layout[r][c] != ROOM_CHAR:
-                    chars.append(layout[r][c])
-        return ''.join(chars).strip()
-
-
 def node_ordering(node):
-    loc_row, loc_col = node.state
-    return loc_row * ROW_LENGTH + loc_col
+    return node.state.row * ROW_LENGTH + node.state.col
 
 
 # Data structures useful for implementing SearchAgents

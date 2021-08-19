@@ -1,15 +1,17 @@
 from dataclasses import dataclass, field
 from concurrent.futures import ProcessPoolExecutor
-from .chartypes import PLAYER_AVATAR
 from .agent import Agent
-from .util import Loc, Node, Queue
+from .util import Loc, Node, Queue, term
 from .search import BlueprintSearchProblem, graph_search
 
 
 @dataclass
 class Player(Agent):
     actions: Queue = field(default_factory=Queue)
-    avatar: str = PLAYER_AVATAR
+    mapChar: str = '!'
+    priorMapChar: str = ''
+    priorLocation: Loc = None
+    displayChar: str = term.reverse('\u25CF')
 
     async def moveTo(self, pos: Loc):
         # noinspection PyUnresolvedReferences
@@ -24,5 +26,7 @@ class Player(Agent):
         if self.numGameTicks > self.game_ticks_before_each_move:
             if not self.actions.isEmpty():
                 self.priorLocation = self.location
+                row, col = self.priorLocation.row, self.priorLocation.col
+                self.priorMapChar = self.parent.layout[row][col]
                 self.location = self.actions.pop()
             self.numGameTicks = 0

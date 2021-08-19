@@ -7,9 +7,8 @@ from .util import Loc, GAME_TICKS_PER_SECOND
 class Agent(ABC):
     name: str
     location: Loc
-    parent: object
+    parent: ...
     numGameTicks: int = 0
-    priorLocation: Loc = None
     velocity: int = 1  # cells per second
 
     @abstractmethod

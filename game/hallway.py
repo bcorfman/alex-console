@@ -1,13 +1,25 @@
-from dataclasses import dataclass
-from .chartypes import HALLWAY_CHAR
-from .util import Loc, term
+from .util import term
 
 
-@dataclass
 class Hallway:
-    locations: frozenset[Loc]
-    mapChar: str = HALLWAY_CHAR
-    displayChar: str = term.white_reverse(' ')
+    mapChar = '~'
+    color = term.white
+    displayChar = term.reverse(' ')
+
+    def __init__(self, locations):
+        self.locations = frozenset(locations)
+
+    def __eq__(self, other):
+        if isinstance(other, frozenset):
+            return self.locations == other
+        else:
+            return self.locations == other.locations
+
+    def __contains__(self, item):
+        return item.location in self.locations
+
+    def __hash__(self):
+        return hash(self.locations)
 
     @classmethod
     def from_list(cls, lst):
