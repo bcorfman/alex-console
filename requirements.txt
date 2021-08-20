@@ -1,2 +1,2 @@
 blessed
-windows-curses; sys_platform == 'Windows'
+windows-curses; platform_system == 'Windows'
