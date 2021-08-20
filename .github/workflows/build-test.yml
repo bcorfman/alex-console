@@ -1,5 +1,4 @@
 name: Python build and test
-
 on:
   push:
     tags-ignore:
