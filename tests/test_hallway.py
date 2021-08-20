@@ -1,4 +1,4 @@
-from game.hallway import Hallway
+from game.blueprint import Hallway
 from game.util import Loc
 
 

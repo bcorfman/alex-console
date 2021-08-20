@@ -1,5 +1,5 @@
 from game.level import Level
-from game.room import Room
+from game.blueprint import Room
 from game.search import graph_search, exhaustive_search, HallwayConstructionProblem, BlueprintSearchProblem
 from game.util import LEVEL1, Queue, Node, Loc
 

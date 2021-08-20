@@ -1,8 +1,7 @@
 from itertools import chain
 from .level import Level
-from .hallway import Hallway
-from .room import Room
-from .player import Player
+from .blueprint import Hallway, Room
+from .characters import Player
 from .util import term, Loc
 
 

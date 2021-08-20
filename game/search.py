@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from .util import Stack, Node, Loc
-from .hallway import Hallway
 
 
 class SearchProblem(ABC):
@@ -71,6 +70,7 @@ class HallwayConstructionProblem(SearchProblem):
         return self._start_node
 
     def getSuccessors(self, node):
+        from .blueprint import Hallway
         nodes = []
         src_row, src_col = node.state.row, node.state.col
         valid_offsets = []

@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 from itertools import chain
-from .room import Room, Perimeter
-from .hallway import Hallway
+from .blueprint import Room, Perimeter, Hallway
 from .util import node_ordering, ROW_LENGTH, Node, PLAYER1_NAME, Loc
 from .search import exhaustive_search, HallwayConstructionProblem
 from .chartypes import PLAYER_CHARS
-from .player import Player
+from .characters import Player
 
 
 @dataclass(init=False)
@@ -91,7 +90,7 @@ class Level:
         for elevator in self.elevators:
             problem = HallwayConstructionProblem(self.layout, Node(elevator.exits[0]), Hallway.mapChar)
             exhaustive_search(problem)
-            locations, room_entrances = problem.visited, problem.room_entrances
+            room_entrances = problem.room_entrances
             self.hallways.extend(problem.hallways)
             # Collect information on each new room. Don't consider rooms that have already been found.
             for entrance in room_entrances:

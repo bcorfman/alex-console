@@ -1,7 +1,6 @@
 from game.level import Level
-from game.room import Room, Perimeter
+from game.blueprint import Room, Perimeter, Hallway
 from game.util import node_ordering, LEVEL1, Loc
-from game.hallway import Hallway
 from game.search import exhaustive_search, HallwayConstructionProblem, Node
 
 
