@@ -16,7 +16,7 @@ class Hallway:
             return self.locations == other.locations
 
     def __contains__(self, item):
-        return item.location in self.locations
+        return item in self.locations
 
     def __hash__(self):
         return hash(self.locations)

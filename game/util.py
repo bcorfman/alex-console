@@ -65,9 +65,6 @@ class Node:
         elif isinstance(other, tuple):
             return self.state == other
 
-    def __contains__(self, item):
-        return self.state == item.state
-
     def __hash__(self):
         return hash(self.state)
 
