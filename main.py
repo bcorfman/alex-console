@@ -1,6 +1,5 @@
 import asyncio
 import curses
-import logging
 from game.util import LEVEL1, GAME_TICK, term
 from game.level import Level, Loc
 from game.display import Console
@@ -54,9 +53,8 @@ class Game:
             await asyncio.sleep(GAME_TICK)
 
 
-# noinspection PyArgumentList
 async def main():
-    logging.basicConfig(filename='debug.txt', filemode='w', encoding='utf-8', level=logging.DEBUG)
+    # logging.basicConfig(filename='debug.txt', filemode='w', encoding='utf-8', level=logging.DEBUG)
     with LeftButtonPressed() as scr:
         game = Game()
         await game.event_loop(scr)

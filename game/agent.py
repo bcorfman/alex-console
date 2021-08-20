@@ -25,4 +25,4 @@ class Agent(ABC):
 
     @property
     def game_ticks_before_each_move(self):
-        return GAME_TICKS_PER_SECOND / self.velocity
+        return GAME_TICKS_PER_SECOND // self.velocity
