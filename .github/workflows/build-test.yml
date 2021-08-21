@@ -14,32 +14,15 @@ jobs:
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
-      - name: Conda info
-        shell: bash -l {0}
-        run: conda info
-      - name: Conda list
-        shell: pwsh
-        run: conda list
       - uses: actions/checkout@v2
-      - name: Setup environment on Windows
-        if: matrix.os == 'windows-latest'
-        run: ./cicd/setup_conda_env.bat
-      - name: Setup environment on non-Windows
-        if: matrix.os != 'windows-latest'
+      - name: Setup environment
         run: |
-          chmod 755 ./cicd/setup_conda_env.sh
-          ./cicd/setup_conda_env.sh
+          conda activate test
+          pip install -r ./tests/requirements.txt
+          pip install -r requirements.txt
       - name: Run tests on Windows
         if: matrix.os == 'windows-latest'
         run: ./cicd/run_tests.bat
       - name: Run tests on non-Windows
         if: matrix.os != 'windows-latest'
         run: ./cicd/run_tests.sh
-      - name: Tear down environment on Windows
-        if: matrix.os == 'windows-latest'
-        run: ./cicd/teardown_conda_env.bat
-      - name: Tear down environment on non-Windows
-        if: matrix.os != 'windows-latest'
-        run: |
-          chmod 755 ./cicd/teardown_conda_env.sh
-          ./cicd/teardown_conda_env.sh
