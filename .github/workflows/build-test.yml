@@ -21,13 +21,21 @@ jobs:
         shell: pwsh
         run: conda list
       - uses: actions/checkout@v2
-      - name: Install latest dependencies
-        run: |
-          pip install -r ./tests/requirements.txt
-          pip install -r requirements.txt
+      - name: Setup environment on Windows
+        if: matrix.os == 'windows-latest'
+        run: ./cicd/setup_conda_env.bat
+      - name: Setup environment on non-Windows
+        if: matrix.os != 'windows-latest'
+        run: ./cicd/setup_conda_env.sh
       - name: Run tests on Windows
         if: matrix.os == 'windows-latest'
         run: ./cicd/run_tests.bat
       - name: Run tests on non-Windows
         if: matrix.os != 'windows-latest'
         run: ./cicd/run_tests.sh
+      - name: Tear down environment on Windows
+        if: matrix.os == 'windows-latest'
+        run: ./cicd/teardown_conda_env.bat
+      - name: Tear down environment on non-Windows
+        if: matrix.os != 'windows-latest'
+        run: ./cicd/teardown_conda_env.sh
