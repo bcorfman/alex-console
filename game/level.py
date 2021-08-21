@@ -29,7 +29,7 @@ class Level:
             self._find_rooms()
 
     def _load_layout(self, filename):
-        with open(filename) as f:
+        with open(filename, encoding='utf-8') as f:
             self.layout = [line.rstrip() for line in f.readlines()]
 
     def _add_border_to_layout(self):
