@@ -15,15 +15,14 @@ jobs:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
       - uses: actions/checkout@v2
-      - name: Setup shell for Conda on Windows
+      - name: Setup env for Conda on Windows
         if: matrix.os == 'windows-latest'
-        run: conda init cmd
+        run: conda activate test
       - name: Run tests on non-Windows
         if: matrix.os != 'windows-latest'
-        run: conda init bash
+        run: source activate test
       - name: Setup environment
         run: |
-          conda activate test
           pip install -r ./tests/requirements.txt
           pip install -r requirements.txt
       - name: Run tests on Windows
