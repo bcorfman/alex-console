@@ -38,7 +38,7 @@ jobs:
         shell: bash -l {0}
         run: ./cicd/run_tests.sh
       - name: Coveralls
-        if: matrix.os != 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest'
         uses: AndreMiras/coveralls-python-action@develop
         with:
           parallel: true
