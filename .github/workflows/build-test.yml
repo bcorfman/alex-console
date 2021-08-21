@@ -12,16 +12,12 @@ jobs:
     steps:
       - uses: conda-incubator/setup-miniconda@v2
         with:
+          activate-environment: test
+          auto-activate-base: false
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
       - uses: actions/checkout@v2
-      - name: Setup env for Conda on Windows
-        if: matrix.os == 'windows-latest'
-        run: conda activate test
-      - name: Run tests on non-Windows
-        if: matrix.os != 'windows-latest'
-        run: source activate test
-      - name: Setup environment
+      - name: Setup packages for test and execution
         run: |
           pip install -r ./tests/requirements.txt
           pip install -r requirements.txt
