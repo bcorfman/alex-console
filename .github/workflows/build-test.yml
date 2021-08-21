@@ -27,8 +27,8 @@ jobs:
       - name: Setup environment on non-Windows
         if: matrix.os != 'windows-latest'
         run: |
-        chmod 755 ./cicd/setup_conda_env.sh
-        ./cicd/setup_conda_env.sh
+          chmod 755 ./cicd/setup_conda_env.sh
+          ./cicd/setup_conda_env.sh
       - name: Run tests on Windows
         if: matrix.os == 'windows-latest'
         run: ./cicd/run_tests.bat
@@ -41,5 +41,5 @@ jobs:
       - name: Tear down environment on non-Windows
         if: matrix.os != 'windows-latest'
         run: |
-        chmod 755 ./cicd/teardown_conda_env.sh
-        ./cicd/teardown_conda_env.sh
+          chmod 755 ./cicd/teardown_conda_env.sh
+          ./cicd/teardown_conda_env.sh
