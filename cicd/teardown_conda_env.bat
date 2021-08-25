@@ -1,2 +1,2 @@
 conda deactivate
-conda remove env -n alex
+conda env remove -n alex
