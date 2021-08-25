@@ -1,3 +1,4 @@
 #!/bin/bash
+source "$CONDA_PREFIX/etc/profile.d/conda.sh"
 conda deactivate
-conda remove env -n alex
+conda env remove -n alex
