@@ -1,0 +1,70 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python application
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.*'
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+  build:
+    needs: create_release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: [3.9]
+        include:
+          - os: ubuntu-latest
+            x86_64: ./scatterplot.bin
+            name: bin
+          - os: windows-latest
+            x86_64: ./scatterplot.exe
+            name: exe
+    steps:
+    - uses: actions/checkout@v2
+    - uses: seanmiddleditch/gha-setup-vsdevenv@master
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest nuitka
+        pip install -r requirements.txt
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Deploy with Nuitka
+      run: python3 -m nuitka --onefile --follow-imports --assume-yes-for-downloads scatterplot.py
+    - name: Upload x86_64 Binary
+      uses: actions/upload-release-asset@v1.0.1
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }}
+        asset_path: ${{ matrix.x86_64 }}
+        asset_name: scatterplot.x86_64.${{ matrix.name }}
+        asset_content_type: application/octet-stream
