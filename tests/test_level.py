@@ -1,7 +1,8 @@
 from game.level import Level
 from game.blueprint import Room, Perimeter, Hallway
-from game.util import node_ordering, LEVEL1, Loc
+from game.util import node_ordering, Loc
 from game.search import exhaustive_search, HallwayConstructionProblem, Node
+from main import LEVEL1
 
 
 def test_load_layout():
