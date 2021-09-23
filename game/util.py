@@ -1,4 +1,3 @@
-import sys
 import os
 import heapq
 from blessed import Terminal
@@ -9,7 +8,7 @@ from dataclasses import dataclass
 term = Terminal()
 
 ROW_LENGTH = 80
-LEVEL1 = os.path.join(os.path.dirname(sys.argv[0]), 'levels', 'level1.txt')
+LEVEL1 = os.path.join(os.path.dirname(__file__), 'levels', 'level1.txt')
 PLAYER1_NAME = 'Brandon'
 GAME_TICKS_PER_SECOND = 20
 GAME_TICK = 1.0 / GAME_TICKS_PER_SECOND
