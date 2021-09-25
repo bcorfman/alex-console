@@ -37,6 +37,7 @@ class Game:
 
     async def event_loop(self, scr):
         self.console.display()
+        scr.refresh()
         while True:
             c = scr.getch()
             if c == curses.KEY_MOUSE:
@@ -53,7 +54,6 @@ class Game:
                 break
             await self.level.update()
             self.console.update()
-            scr.refresh()
             await asyncio.sleep(GAME_TICK)
 
 
