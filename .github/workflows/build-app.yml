@@ -65,7 +65,7 @@ jobs:
       run: python3 -m nuitka --include-data-file=levels/level1.txt=levels/level1.txt --onefile --assume-yes-for-downloads main.py
     - name: Deploy with Nuitka on Windows
       if: matrix.os == 'windows-latest'
-      run: python3 -m nuitka --include-module=jinxed.terminfo.vtwin10 --include-package=curses --include-module=_curses --include-data-file=levels/level1.txt=levels/level1.txt --onefile --assume-yes-for-downloads main.py
+      run: python3 -m nuitka --include-module=jinxed.terminfo.vtwin10 --include-module=jinxed.terminfo.ansicon --include-package=curses --include-module=_curses --include-data-file=levels/level1.txt=levels/level1.txt --onefile --assume-yes-for-downloads main.py
     - name: Upload x86_64 Binary
       uses: actions/upload-release-asset@v1.0.1
       with:
