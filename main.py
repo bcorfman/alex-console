@@ -53,6 +53,7 @@ class Game:
                 break
             await self.level.update()
             self.console.update()
+            scr.refresh()
             await asyncio.sleep(GAME_TICK)
 
 
