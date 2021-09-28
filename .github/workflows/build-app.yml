@@ -44,6 +44,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: seanmiddleditch/gha-setup-vsdevenv@master
+    - name: Set env repo name
+      run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#*\/}" >> $GITHUB_ENV
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -66,5 +68,5 @@ jobs:
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: ${{ matrix.x86_64 }}
-        asset_name: alex.x86_64.${{ matrix.name }}
+        asset_name: ${{ env.REPOSITORY_NAME }}.${{ matrix.name }}
         asset_content_type: application/octet-stream
