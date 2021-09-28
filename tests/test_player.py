@@ -3,7 +3,8 @@ import asyncio
 import pytest
 from game.characters import Player
 from game.level import Level
-from game.util import LEVEL1, Loc, GAME_TICKS_PER_SECOND, GAME_TICK
+from game.util import Loc, GAME_TICKS_PER_SECOND, GAME_TICK
+from main import LEVEL1
 
 
 @pytest.mark.asyncio

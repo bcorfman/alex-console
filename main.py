@@ -1,8 +1,11 @@
+import os
 import asyncio
 import curses
-from game.util import LEVEL1, GAME_TICK, term
+from game.util import GAME_TICK, term
 from game.level import Level, Loc
 from game.display import Console
+
+LEVEL1 = os.path.join(os.path.dirname(__file__), 'levels', 'level1.txt')
 
 
 class LeftButtonPressed:
@@ -34,6 +37,7 @@ class Game:
 
     async def event_loop(self, scr):
         self.console.display()
+        scr.refresh()
         while True:
             c = scr.getch()
             if c == curses.KEY_MOUSE:

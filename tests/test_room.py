@@ -1,5 +1,6 @@
 from game.level import Level
-from game.util import LEVEL1, Loc
+from game.util import Loc
+from main import LEVEL1
 
 
 def test_elevator_exits():

@@ -1,7 +1,8 @@
 from game.level import Level
 from game.blueprint import Room
 from game.search import graph_search, exhaustive_search, HallwayConstructionProblem, BlueprintSearchProblem
-from game.util import LEVEL1, Queue, Node, Loc
+from game.util import Queue, Node, Loc
+from main import LEVEL1
 
 
 def test_single_node_expansion_on_elevator():
