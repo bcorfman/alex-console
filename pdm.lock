@@ -101,6 +101,11 @@ version = "0.6.1"
 summary = "McCabe checker, plugin for flake8"
 
 [[package]]
+name = "nuitka"
+version = "0.7.7"
+summary = "Python compiler with full language support and CPython compatibility"
+
+[[package]]
 name = "packaging"
 version = "21.3"
 requires_python = ">=3.6"
@@ -201,7 +206,7 @@ summary = "Measures the displayed width of unicode strings in a terminal"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:d679a80b7761563016b27b91bfd115fb7d14974904f6bfa6140946f8af6440a6"
+content_hash = "sha256:0f64c85c529362755c295fd09b025524f36b0536b779a0b29bd0d52ab9e1a65c"
 
 [metadata.files]
 "ansicon 1.89.0" = [
@@ -301,6 +306,9 @@ content_hash = "sha256:d679a80b7761563016b27b91bfd115fb7d14974904f6bfa6140946f8a
 "mccabe 0.6.1" = [
     {file = "mccabe-0.6.1-py2.py3-none-any.whl", hash = "sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42"},
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
+]
+"nuitka 0.7.7" = [
+    {file = "Nuitka-0.7.7.tar.gz", hash = "sha256:c2bac25edae92d3ab00f6d16f9e32e5f25f55508e1e380b0ab0120e46e4b1767"},
 ]
 "packaging 21.3" = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
