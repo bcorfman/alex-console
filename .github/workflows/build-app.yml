@@ -55,7 +55,7 @@ jobs:
           pip install flake8 pytest nuitka pdm
           pdm install
       - name: Deploy with Nuitka
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == "3.9"
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
         run: python3 -m nuitka --include-data-file=levels/level1.txt=levels/level1.txt --onefile --assume-yes-for-downloads main.py
       - name: Upload x86_64 Binary
         uses: actions/upload-release-asset@v1.0.1
