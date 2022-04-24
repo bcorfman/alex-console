@@ -6,11 +6,11 @@ name: Python application
 on:
   push:
     tags:
-      - 'v[0-9]+.*'
+      - "v[0-9]+.*"
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  APP_NAME: 'alex'
+  APP_NAME: "alex"
 
 jobs:
   create_release:
@@ -33,46 +33,37 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        python-version: [3.9]
+        os: [ubuntu-latest]
+        python-version: ["3.9"]
         include:
           - os: ubuntu-latest
+            platform: ubuntu
             x86_64: ./main.bin
             name: bin
-          - os: windows-latest
-            x86_64: ./main.exe
-            name: exe
     steps:
-    - uses: actions/checkout@v2
-    - uses: seanmiddleditch/gha-setup-vsdevenv@master
-    - uses: Chocobo1/setup-ccache-action@v1
-    - name: Set env repo name
-      run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#*\/}" >> $GITHUB_ENV
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest nuitka
-        pip install -r requirements.txt
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Deploy with Nuitka on non-Windows
-      if: matrix.os != 'windows-latest'
-      run: python3 -m nuitka --include-data-file=levels/level1.txt=levels/level1.txt --onefile --assume-yes-for-downloads main.py
-    - name: Deploy with Nuitka on Windows
-      if: matrix.os == 'windows-latest'
-      run: python3 -m nuitka  --windows-onefile-tempdir-spec=c:\\mywork --include-module=jinxed.terminfo.vtwin10 --include-module=jinxed.terminfo.ansicon --include-package=curses --include-module=_curses --include-data-file=levels/level1.txt=levels/level1.txt --onefile --assume-yes-for-downloads main.py
-    - name: Upload x86_64 Binary
-      uses: actions/upload-release-asset@v1.0.1
-      with:
-        upload_url: ${{ needs.create_release.outputs.upload_url }}
-        asset_path: ${{ matrix.x86_64 }}
-        asset_name: ${{ env.APP_NAME }}.${{ matrix.name }}
-        asset_content_type: application/octet-stream
+      - uses: actions/checkout@v2
+      - uses: seanmiddleditch/gha-setup-vsdevenv@master
+      - uses: Chocobo1/setup-ccache-action@v1
+      - name: Set env repo name
+        run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#*\/}" >> $GITHUB_ENV
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@main
+        with:
+          python-version: 3.9 # Version range or exact version of a Python version to use, the same as actions/setup-python
+          architecture: x64 # The target architecture (x86, x64) of the Python interpreter. the same as actions/setup-python
+          version: 1.14.1 # The version of PDM to install. Leave it as empty to use the latest version from PyPI
+          prerelease: false # Allow prerelease versions to be installed
+          enable-pep582: true # Enable PEP 582 package loading globally
+      - name: Install dependencies
+        run: |
+          pdm install -d
+      - name: Deploy with Nuitka
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+        run: pdm run python3 -m nuitka --include-module=multiprocessing --include-data-file=levels/level1.txt=levels/level1.txt --onefile --assume-yes-for-downloads main.py
+      - name: Upload x86_64 Binary
+        uses: actions/upload-release-asset@v1.0.1
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ${{ matrix.x86_64 }}
+          asset_name: ${{ env.APP_NAME }}.${{ matrix.platform }}.${{ matrix.name }}
+          asset_content_type: application/octet-stream

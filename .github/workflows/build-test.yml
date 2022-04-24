@@ -7,36 +7,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        python-version: [ 3.9 ]
+        os: [ubuntu-latest, macos-latest]
+        python-version: [3.9]
     steps:
       - uses: actions/checkout@v2
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: actions/setup-python@v2
         with:
-          activate-environment: test
-          auto-activate-base: false
-          auto-update-conda: true
           python-version: ${{ matrix.python-version }}
-      - name: Set up non-Windows dependencies
-        if: matrix.os != 'windows-latest'
-        shell: bash -l {0}
+      - name: Install prerequisites
         run: |
-          pip install -r ./tests/requirements.txt
-          pip install -r requirements.txt
-      - name: Set up Windows dependencies
-        if: matrix.os == 'windows-latest'
-        shell: cmd /C CALL {0}
+          python -m pip install --upgrade pip
+          pip install pdm
+      - name: Install project dependencies
         run: |
-          pip install -r ./tests/requirements.txt
-          pip install -r requirements.txt
-      - name: Run tests on Windows
-        if: matrix.os == 'windows-latest'
-        shell: cmd /C CALL {0}
-        run: ./cicd/run_tests.bat
-      - name: Run tests on non-Windows
-        if: matrix.os != 'windows-latest'
-        shell: bash -l {0}
-        run: ./cicd/run_tests.sh
+          pdm install
+      - name: Test with pytest
+        run: pdm run pytest
       - name: Coveralls
         if: matrix.os == 'ubuntu-latest'
         uses: AndreMiras/coveralls-python-action@develop
