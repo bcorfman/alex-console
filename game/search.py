@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .util import Stack, Node, Loc
+from .util import Loc, manhattan_distance, Node, PriorityQueue, Queue, Stack
 
 
 class SearchProblem(ABC):
@@ -25,6 +25,10 @@ class SearchProblem(ABC):
     def getCostOfActions(self, actions):
         return len(actions)
 
+    @abstractmethod
+    def h(self, state):
+        """ Returns the heuristic value of a given state. """
+
 
 class BlueprintSearchProblem(SearchProblem):
     def __init__(self, grid, start_node, goal_node):
@@ -40,7 +44,13 @@ class BlueprintSearchProblem(SearchProblem):
         return node == self._goal_node
 
     def storeResults(self, node):
-        self.actions = list(node.actions)
+        self.actions = list(reversed(node.actions))
+
+    def applicable(self, row, col):
+        return self._grid[row][col] != ' '
+
+    def apply(self, node, loc):
+        return Node(loc, node.actions + [loc], node.cost + self.h(loc))
 
     def getSuccessors(self, node):
         nodes = []
@@ -48,9 +58,13 @@ class BlueprintSearchProblem(SearchProblem):
         for offset_row, offset_col in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             new_row, new_col = src_row + offset_row, src_col + offset_col
             new_loc = Loc(new_row, new_col)
-            if self._grid[new_row][new_col] != ' ':
-                nodes.append(Node(new_loc, node.actions + [new_loc], node.cost + 1))
+            if self.applicable(new_row, new_col):
+                new_node = self.apply(node, new_loc)
+                nodes.append(new_node)
         return nodes
+
+    def h(self, loc):
+        return manhattan_distance(self._goal_node.state, loc)
 
 
 class HallwayConstructionProblem(SearchProblem):
@@ -103,6 +117,7 @@ class HallwayConstructionProblem(SearchProblem):
         return nodes
 
     def isGoal(self, node):
+        # only use in AStarSearch
         return NotImplementedError
 
     def storeResults(self, visited_nodes):
@@ -110,6 +125,10 @@ class HallwayConstructionProblem(SearchProblem):
         for outlier in self.fringe:
             if outlier not in self.room_entrances:
                 self.room_entrances.add(outlier)
+
+    def h(self, state):
+        # only use in AStarSearch
+        return NotImplementedError
 
 
 def exhaustive_search(problem):
@@ -129,7 +148,9 @@ def exhaustive_search(problem):
 
 def graph_search(problem: SearchProblem, frontier):
     result = None
-    frontier.update(problem.getStartNode())
+    initial_node = problem.getStartNode()
+    initial_cost = problem.h(initial_node.state)
+    frontier.update(initial_node, initial_cost)
     visited = set()
     while not frontier.isEmpty():
         node = frontier.pop()
@@ -137,9 +158,22 @@ def graph_search(problem: SearchProblem, frontier):
             problem.storeResults(node)
             result = problem
             break
-        if node.state not in visited:
-            visited.add(node.state)
-            successors = problem.getSuccessors(node)
-            for new_node in successors:
+        visited.add(node.state)
+        for new_node in problem.getSuccessors(node):
+            if new_node.state not in visited and new_node not in frontier:
+                frontier.push(new_node)
+            elif new_node in frontier:
                 frontier.update(new_node)
     return result
+
+
+def breadth_first_search(problem):
+    """Search the shallowest nodes in the search tree first."""
+    frontier = Queue()
+    return graph_search(problem, frontier)
+
+
+def astar_search(problem):
+    """Search the node that has the lowest combined cost and heuristic first."""
+    frontier = PriorityQueue()
+    return graph_search(problem, frontier)

@@ -1,6 +1,6 @@
 from game.level import Level
 from game.blueprint import Room
-from game.search import graph_search, exhaustive_search, HallwayConstructionProblem, BlueprintSearchProblem
+from game.search import astar_search, exhaustive_search, HallwayConstructionProblem, BlueprintSearchProblem
 from game.util import Queue, Node, Loc
 from main import LEVEL1
 
@@ -32,5 +32,6 @@ def test_blueprint_problem_in_hallways():
     start_node = Node(Loc(5, 1))
     goal_node = Node(Loc(10, 40))
     bfs_problem = BlueprintSearchProblem(level.layout, start_node, goal_node)
-    graph_search(bfs_problem, Queue())
+    astar_search(bfs_problem)
     assert len(bfs_problem.actions) == 44
+
