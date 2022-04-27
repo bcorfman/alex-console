@@ -1,4 +1,4 @@
-from game.util import Loc
+from game.util import Loc, manhattan_distance
 
 
 def test_create_loc_from_tuple():
@@ -10,3 +10,8 @@ def test_loc_equals():
     assert Loc(2, 3) == Loc(2, 3)
     assert Loc(2, 3) == Loc.from_tuple((2, 3))
     assert Loc(2, 3) == (2, 3)
+
+
+def test_manhattan_distance():
+    assert manhattan_distance(Loc(2, 3), Loc(4, 5)) == 4
+    assert manhattan_distance(Loc(-2, 3), Loc(2, -5)) == 12

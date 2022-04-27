@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from concurrent.futures import ProcessPoolExecutor
 from .util import Node, Queue, term
-from .search import BlueprintSearchProblem, graph_search
+from .search import BlueprintSearchProblem, astar_search
 from .util import Loc, GAME_TICKS_PER_SECOND
 
 
@@ -43,7 +43,7 @@ class Player(Agent):
         # noinspection PyUnresolvedReferences
         problem = BlueprintSearchProblem(self.parent.layout, Node(self.location), Node(pos))
         with ProcessPoolExecutor(max_workers=1) as executor:
-            future = executor.submit(graph_search, problem, Queue())
+            future = executor.submit(astar_search, problem)
         completed = future.result()
         self.actions = Queue(completed.actions) if completed else Queue()
 

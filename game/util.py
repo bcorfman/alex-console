@@ -52,6 +52,12 @@ class Node:
         elif isinstance(other, tuple):
             return self.state == other
 
+    def __lt__(self, other):
+        if isinstance(other, Node):
+            return self.cost < other.cost
+        else:
+            raise TypeError(f'Cannot compare Node to unknown type {type(other)}')
+
     def __hash__(self):
         return hash(self.state)
 
@@ -60,39 +66,48 @@ def node_ordering(node):
     return node.state.row * ROW_LENGTH + node.state.col
 
 
-# Data structures useful for implementing SearchAgents
+def manhattan_distance(a, b):
+    return abs(a.row - b.row) + abs(a.col - b.col)
+
+
 class Stack:
-    """ A container with a last-in-first-out (LIFO) queuing policy. """
-    def __init__(self, lst=None):
-        if lst is None:
-            lst = []
-        self.list = lst
+    def __init__(self):
+        self._data = []
 
     def __repr__(self):
-        return f'Stack({self.list})'
+        return f'Stack({self._data})'
 
     def __getitem__(self, item):
-        return self.list[item]
+        return self._data[item]
 
     def __delitem__(self, key):
-        del self.list[key]
+        del self._data[key]
 
-    def update(self, item):
-        """ Add the item into the queue if not there; otherwise,
-        update in place if cost is lower. """
-        if item not in self.list:
-            self.list.append(item)
-        else:
-            idx = self.list.index(item)
-            if item.cost < self.list[idx].cost:
-                self.list[idx] = item
+    def __contains__(self, item):
+        return item in self._data
+
+    def push(self, item, _priority=None):
+        self._data.append(item)
 
     def pop(self):
-        """ Pop the most recently pushed item from the stack """
-        return self.list.pop()
+        return self._data.pop()
 
     def isEmpty(self):
-        return len(self.list) == 0
+        return self.count == 0
+
+    def update(self, item, _priority=None):
+        """ Add the item into the queue if not there; otherwise,
+        update in place if cost is lower. """
+        if item not in self._data:
+            self._data.append(item)
+        else:
+            idx = self._data.index(item)
+            if item.cost < self._data[idx].cost:
+                self._data[idx] = item
+
+    @property
+    def count(self):
+        return len(self._data)
 
 
 class Queue:
@@ -100,34 +115,42 @@ class Queue:
     def __init__(self, lst=None):
         if lst is None:
             lst = []
-        self.deque = deque(lst)
+        self._data = deque(lst)
 
     def __repr__(self):
-        return f'Queue({self.deque})'
+        return f'Queue({self._data})'
 
     def __getitem__(self, item):
-        return self.deque[item]
+        return self._data[item]
 
     def __delitem__(self, key):
-        del self.deque[key]
+        del self._data[key]
 
-    def update(self, item):
-        """ Add the item into the queue if not there; otherwise,
-        update in place if cost is lower. """
-        if item not in self.deque:
-            self.deque.append(item)
-        else:
-            idx = self.deque.index(item)
-            if item.cost < self.deque[idx].cost:
-                self.deque[idx] = item
+    def __contains__(self, item):
+        return item in self._data
+
+    def push(self, item, _priority=None):
+        self._data.appendleft(item)
 
     def pop(self):
-        """ Dequeue the earliest enqueued item still in the queue. This
-          operation removes the item from the queue. """
-        return self.deque.popleft()
+        return self._data.pop()
 
     def isEmpty(self):
-        return len(self.deque) == 0
+        return self.count == 0
+
+    def update(self, item, _priority=None):
+        """ Add the item into the queue if not there; otherwise,
+        update in place if cost is lower. """
+        if item not in self._data:
+            self._data.appendleft(item)
+        else:
+            idx = self._data.index(item)
+            if item.cost < self._data[idx].cost:
+                self._data[idx] = item
+
+    @property
+    def count(self):
+        return len(self._data)
 
 
 class PriorityQueue:
@@ -137,38 +160,42 @@ class PriorityQueue:
       in quick retrieval of the lowest-priority item in the queue. This
       data structure allows O(1) access to the lowest-priority item.
     """
-
     def __init__(self, heap=None, count=None):
         if heap is None:
             heap = []
-        self.heap = heap
-        if count is None:
-            count = 0
-        self.count = count
+        self._data = heap
 
-    def push(self, item, priority):
+    def __repr__(self):
+        return f'PriorityQueue({self._data})'
+
+    def __contains__(self, item):
+        return item in self._data
+
+    def push(self, item, priority=None):
+        if priority is None:
+            priority = item.cost
         entry = (priority, self.count, item)
-        heapq.heappush(self.heap, entry)
-        self.count += 1
+        heapq.heappush(self._data, entry)
 
     def pop(self):
-        (_, _, item) = heapq.heappop(self.heap)
+        (_, _, item) = heapq.heappop(self._data)
         return item
 
     def isEmpty(self):
-        return len(self.heap) == 0
+        return len(self._data) == 0
+
+    @property
+    def count(self):
+        return len(self._data)
 
     def update(self, item, priority):
-        # If item already in priority queue with higher priority, update its priority and rebuild the heap.
-        # If item already in priority queue with equal or lower priority, do nothing.
-        # If item not in priority queue, do the same thing as self.push.
-        for index, (p, c, i) in enumerate(self.heap):
+        for index, (p, c, i) in enumerate(self._data):
             if i == item:
                 if p <= priority:
                     break
-                del self.heap[index]
-                self.heap.append((priority, c, item))
-                heapq.heapify(self.heap)
+                del self._data[index]
+                self._data.append((priority, c, item))
+                heapq.heapify(self._data)
                 break
         else:
             self.push(item, priority)
