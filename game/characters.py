@@ -33,7 +33,7 @@ class Agent(ABC):
 
 @dataclass
 class Player(Agent):
-    actions: Queue = field(default_factory=Queue)
+    actions: list = field(default_factory=list)
     mapChar: str = '!'
     priorMapChar: str = ''
     priorLocation: Loc = None
@@ -45,12 +45,12 @@ class Player(Agent):
         with ProcessPoolExecutor(max_workers=1) as executor:
             future = executor.submit(astar_search, problem)
         completed = future.result()
-        self.actions = Queue(completed.actions) if completed else Queue()
+        self.actions = completed.actions if completed else []
 
     def update(self):
         self.numGameTicks += 1
         if self.numGameTicks > self.game_ticks_before_each_move:
-            if not self.actions.isEmpty():
+            if len(self.actions) > 0:
                 self.priorLocation = self.location
                 row, col = self.priorLocation.row, self.priorLocation.col
                 self.priorMapChar = self.parent.layout[row][col]

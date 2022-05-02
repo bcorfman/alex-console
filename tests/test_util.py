@@ -1,4 +1,4 @@
-from game.util import Loc, manhattan_distance
+from game.util import Loc, manhattan_distance, PriorityQueue
 
 
 def test_create_loc_from_tuple():
@@ -15,3 +15,18 @@ def test_loc_equals():
 def test_manhattan_distance():
     assert manhattan_distance(Loc(2, 3), Loc(4, 5)) == 4
     assert manhattan_distance(Loc(-2, 3), Loc(2, -5)) == 12
+
+
+def test_priority_queue():
+    pq = PriorityQueue()
+    pq.push('a', 12)
+    pq.push('b', 15)
+    pq.push('c', 7)
+    pq.update('b', 13)
+    pq.update('a', 8)
+    item = pq.pop()
+    assert item == 'c'
+    item = pq.pop()
+    assert item == 'a'
+    item = pq.pop()
+    assert item == 'b'

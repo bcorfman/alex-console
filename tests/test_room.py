@@ -49,7 +49,7 @@ def test_player_contained_in_room():
     player = level.get_first_player()
     # move player's location to the top left corner of the first room.
     top_left = level.rooms[0].perimeter.top_left
-    row, col = top_left.state.row, top_left.state.col
+    row, col = top_left.row, top_left.col
     player.location = Loc(row, col)
     inside = False
     for room in level.rooms:

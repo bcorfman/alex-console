@@ -17,10 +17,6 @@ class Loc:
     row: int
     col: int
 
-    # def __iter__(self):
-    #    yield self.row
-    #    yield self.col
-
     def __eq__(self, other):
         if isinstance(other, Loc):
             return self.row == other.row and self.col == other.col
@@ -62,8 +58,8 @@ class Node:
         return hash(self.state)
 
 
-def node_ordering(node):
-    return node.state.row * ROW_LENGTH + node.state.col
+def loc_ordering(loc):
+    return loc.row * ROW_LENGTH + loc.col
 
 
 def manhattan_distance(a, b):
@@ -76,6 +72,9 @@ class Stack:
 
     def __repr__(self):
         return f'Stack({self._data})'
+
+    def __len__(self):
+        return len(self._data)
 
     def __getitem__(self, item):
         return self._data[item]
@@ -93,7 +92,7 @@ class Stack:
         return self._data.pop()
 
     def isEmpty(self):
-        return self.count == 0
+        return len(self._data) == 0
 
     def update(self, item, _priority=None):
         """ Add the item into the queue if not there; otherwise,
@@ -105,10 +104,6 @@ class Stack:
             if item.cost < self._data[idx].cost:
                 self._data[idx] = item
 
-    @property
-    def count(self):
-        return len(self._data)
-
 
 class Queue:
     """ A container with a first-in-first-out (FIFO) queuing policy. """
@@ -116,6 +111,9 @@ class Queue:
         if lst is None:
             lst = []
         self._data = deque(lst)
+
+    def __len__(self):
+        return len(self._data)
 
     def __repr__(self):
         return f'Queue({self._data})'
@@ -136,7 +134,7 @@ class Queue:
         return self._data.pop()
 
     def isEmpty(self):
-        return self.count == 0
+        return len(self._data) == 0
 
     def update(self, item, _priority=None):
         """ Add the item into the queue if not there; otherwise,
@@ -147,10 +145,6 @@ class Queue:
             idx = self._data.index(item)
             if item.cost < self._data[idx].cost:
                 self._data[idx] = item
-
-    @property
-    def count(self):
-        return len(self._data)
 
 
 class PriorityQueue:
@@ -165,16 +159,22 @@ class PriorityQueue:
             heap = []
         self._data = heap
 
+    def __len__(self):
+        return len(self._data)
+
     def __repr__(self):
         return f'PriorityQueue({self._data})'
 
     def __contains__(self, item):
-        return item in self._data
+        for p, c, i in self._data:
+            if i.state == item.state:
+                return True
+        return False
 
     def push(self, item, priority=None):
         if priority is None:
             priority = item.cost
-        entry = (priority, self.count, item)
+        entry = (priority, len(self._data), item)
         heapq.heappush(self._data, entry)
 
     def pop(self):
@@ -183,10 +183,6 @@ class PriorityQueue:
 
     def isEmpty(self):
         return len(self._data) == 0
-
-    @property
-    def count(self):
-        return len(self._data)
 
     def update(self, item, priority):
         for index, (p, c, i) in enumerate(self._data):

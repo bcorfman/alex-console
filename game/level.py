@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from itertools import chain
 from .blueprint import Room, Perimeter, Hallway
-from .util import node_ordering, ROW_LENGTH, Node, PLAYER1_NAME, Loc
+from .util import loc_ordering, ROW_LENGTH, Node, PLAYER1_NAME, Loc
 from .search import exhaustive_search, HallwayConstructionProblem
 from .chartypes import PLAYER_CHARS
 from .characters import Player
@@ -48,8 +48,8 @@ class Level:
                     loc = Loc(row, col - 2)
                     problem = HallwayConstructionProblem(self.layout, Node(loc), Room.mapChar)
                     exhaustive_search(problem)
-                    p = Perimeter(min(problem.visited, key=node_ordering),
-                                  max(problem.visited, key=node_ordering))
+                    p = Perimeter(min(problem.visited, key=loc_ordering),
+                                  max(problem.visited, key=loc_ordering))
                     exits = self._identify_room_exits(p)
                     self.elevators.append(Room('ELEVATOR', p, exits))
 
@@ -71,8 +71,8 @@ class Level:
 
     def _identify_room_exits(self, room_perimeter):
         new_perimeter = room_perimeter.expand_border()
-        tl_row, tl_col = new_perimeter.top_left.state.row, new_perimeter.top_left.state.col
-        br_row, br_col = new_perimeter.bottom_right.state.row, new_perimeter.bottom_right.state.col
+        tl_row, tl_col = new_perimeter.top_left.row, new_perimeter.top_left.col
+        br_row, br_col = new_perimeter.bottom_right.row, new_perimeter.bottom_right.col
         exits = [self._search_for_exit_in_row(tl_row, tl_col, br_col + 1),
                  self._search_for_exit_in_row(br_row, tl_col, br_col + 1),
                  self._search_for_exit_in_col(tl_col, tl_row, br_row + 1),
@@ -96,8 +96,8 @@ class Level:
             for entrance in room_entrances:
                 problem = HallwayConstructionProblem(self.layout, Node(entrance), Room.mapChar)
                 exhaustive_search(problem)
-                p = Perimeter(min(problem.visited, key=node_ordering),
-                              max(problem.visited, key=node_ordering))
+                p = Perimeter(min(problem.visited, key=loc_ordering),
+                              max(problem.visited, key=loc_ordering))
                 if p not in perimeters_found:
                     name = p.find_room_name(self.layout)
                     exits = self._identify_room_exits(p)

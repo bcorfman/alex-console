@@ -17,7 +17,7 @@ class SearchProblem(ABC):
           and return them as a list of successors. """
 
     @abstractmethod
-    def storeResults(self, visited):
+    def storeResults(self, node, visited, num_explored):
         """ Once search is complete, use this method to store the results.
         Visited nodes are passed in directly from graph_search, while other data generated in
         getSuccessors should be stored as the problem is solved and stored during this method call. """
@@ -36,6 +36,8 @@ class BlueprintSearchProblem(SearchProblem):
         self._start_node = start_node
         self._goal_node = goal_node
         self.actions = []
+        self.num_visited = 0
+        self.num_explored = 0
 
     def getStartNode(self):
         return self._start_node
@@ -43,14 +45,16 @@ class BlueprintSearchProblem(SearchProblem):
     def isGoal(self, node):
         return node == self._goal_node
 
-    def storeResults(self, node):
+    def storeResults(self, node, visited, num_explored):
         self.actions = list(reversed(node.actions))
+        self.num_visited = len(visited)
+        self.num_explored = num_explored
 
-    def applicable(self, row, col):
-        return self._grid[row][col] != ' '
+    def applicable(self, loc):
+        return self._grid[loc.row][loc.col] != ' '
 
     def apply(self, node, loc):
-        return Node(loc, node.actions + [loc], node.cost + self.h(loc))
+        return Node(loc, node.actions + [loc], node.cost + 1)
 
     def getSuccessors(self, node):
         nodes = []
@@ -58,7 +62,7 @@ class BlueprintSearchProblem(SearchProblem):
         for offset_row, offset_col in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             new_row, new_col = src_row + offset_row, src_col + offset_col
             new_loc = Loc(new_row, new_col)
-            if self.applicable(new_row, new_col):
+            if self.applicable(new_loc):
                 new_node = self.apply(node, new_loc)
                 nodes.append(new_node)
         return nodes
@@ -79,6 +83,7 @@ class HallwayConstructionProblem(SearchProblem):
         self.room_entrances = set()
         self._goal = None
         self.visited = None
+        self.num_explored = 0
 
     def getStartNode(self):
         return self._start_node
@@ -120,15 +125,16 @@ class HallwayConstructionProblem(SearchProblem):
         # only use in AStarSearch
         return NotImplementedError
 
-    def storeResults(self, visited_nodes):
-        self.visited = visited_nodes
+    def storeResults(self, node, visited, num_explored):
+        self.visited = visited
+        self.num_explored = num_explored
         for outlier in self.fringe:
             if outlier not in self.room_entrances:
                 self.room_entrances.add(outlier)
 
     def h(self, state):
         # only use in AStarSearch
-        return NotImplementedError
+        return 0
 
 
 def exhaustive_search(problem):
@@ -136,14 +142,17 @@ def exhaustive_search(problem):
     frontier = Stack()
     frontier.update(problem.getStartNode())
     visited = set()
+    node = None
+    num_explored = 0
     while not frontier.isEmpty():
         node = frontier.pop()
-        visited.add(node)
+        num_explored += 1
+        visited.add(node.state)
         successors = problem.getSuccessors(node)
         for new_node in successors:
-            if new_node not in visited:
+            if new_node.state not in visited:
                 frontier.update(new_node)
-    problem.storeResults(visited)
+    problem.storeResults(node, visited, num_explored)
 
 
 def graph_search(problem: SearchProblem, frontier):
@@ -152,18 +161,20 @@ def graph_search(problem: SearchProblem, frontier):
     initial_cost = problem.h(initial_node.state)
     frontier.update(initial_node, initial_cost)
     visited = set()
+    num_explored = 0
     while not frontier.isEmpty():
         node = frontier.pop()
+        num_explored += 1
         if problem.isGoal(node):
-            problem.storeResults(node)
+            problem.storeResults(node, visited, num_explored)
             result = problem
             break
         visited.add(node.state)
         for new_node in problem.getSuccessors(node):
             if new_node.state not in visited and new_node not in frontier:
-                frontier.push(new_node)
+                frontier.push(new_node, new_node.cost + problem.h(new_node.state))
             elif new_node in frontier:
-                frontier.update(new_node)
+                frontier.update(new_node, new_node.cost + problem.h(new_node.state))
     return result
 
 

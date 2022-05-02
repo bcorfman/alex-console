@@ -1,6 +1,6 @@
 from game.level import Level
 from game.blueprint import Room, Perimeter, Hallway
-from game.util import node_ordering, Loc
+from game.util import loc_ordering, Loc
 from game.search import exhaustive_search, HallwayConstructionProblem, Node
 from main import LEVEL1
 
@@ -25,17 +25,17 @@ def test_location_ordering():
     start_loc = Loc(12, 2)
     problem = HallwayConstructionProblem(level.layout, Node(start_loc), Room.mapChar)
     exhaustive_search(problem)
-    min_node = min(problem.visited, key=node_ordering)
-    max_node = max(problem.visited, key=node_ordering)
-    assert (Loc(12, 1) == min_node.state)
-    assert (Loc(14, 8) == max_node.state)
+    min_loc = min(problem.visited, key=loc_ordering)
+    max_loc = max(problem.visited, key=loc_ordering)
+    assert (Loc(12, 1) == min_loc)
+    assert (Loc(14, 8) == max_loc)
 
 
 def test_find_room_name():
     level = Level()
     level._load_layout(LEVEL1)
     level._add_border_to_layout()
-    p = Perimeter(Node(Loc(1, 9)), Node(Loc(3, 32)))
+    p = Perimeter(Loc(1, 9), Loc(3, 32))
     assert p.find_room_name(level.layout) == 'CARGO'
 
 
@@ -45,10 +45,10 @@ def test_find_elevators():
     level._add_border_to_layout()
     level._find_elevators()
     elevator1, elevator2 = level.elevators[0], level.elevators[1]
-    assert (elevator1.name == 'ELEVATOR' and elevator1.perimeter.top_left == Node(Loc(1, 44)) and
-            elevator1.perimeter.bottom_right == Node(Loc(3, 51)))
-    assert (elevator2.name == 'ELEVATOR' and elevator2.perimeter.top_left == Node(Loc(12, 1)) and
-            elevator2.perimeter.bottom_right == Node(Loc(14, 8)))
+    assert (elevator1.name == 'ELEVATOR' and elevator1.perimeter.top_left == Loc(1, 44) and
+            elevator1.perimeter.bottom_right == Loc(3, 51))
+    assert (elevator2.name == 'ELEVATOR' and elevator2.perimeter.top_left == Loc(12, 1) and
+            elevator2.perimeter.bottom_right == Loc(14, 8))
 
 
 def test_initialize_level():
