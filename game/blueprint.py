@@ -1,12 +1,12 @@
 from dataclasses import dataclass, field
-from .util import Node, term, Loc
+from .util import term, Loc
 from .characters import Player
 
 
 @dataclass(frozen=True)
 class Perimeter:
     top_left: Loc
-    bottom_right:Loc
+    bottom_right: Loc
 
     def expand_border(self, amt=1):
         tl_row, tl_col = self.top_left.row, self.top_left.col

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from concurrent.futures import ProcessPoolExecutor
-from .util import Node, Queue, term
+from .util import Node, term
 from .search import BlueprintSearchProblem, astar_search
 from .util import Loc, GAME_TICKS_PER_SECOND
 

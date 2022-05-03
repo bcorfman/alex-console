@@ -4,7 +4,6 @@ from game.search import breadth_first_search, astar_search, exhaustive_search, H
     BlueprintSearchProblem
 from game.util import Node, Loc, PriorityQueue
 from main import LEVEL1
-import pdb
 
 
 def test_single_node_expansion_on_elevator():

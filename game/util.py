@@ -154,7 +154,7 @@ class PriorityQueue:
       in quick retrieval of the lowest-priority item in the queue. This
       data structure allows O(1) access to the lowest-priority item.
     """
-    def __init__(self, heap=None, count=None):
+    def __init__(self, heap=None, _count=None):
         if heap is None:
             heap = []
         self._data = heap
