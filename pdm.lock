@@ -145,6 +145,11 @@ requires_python = ">=3.6.8"
 summary = "pyparsing module - Classes and methods to define and execute parsing grammars"
 
 [[package]]
+name = "pysnooper"
+version = "1.1.1"
+summary = "A poor man's debugger for Python."
+
+[[package]]
 name = "pytest"
 version = "7.1.2"
 requires_python = ">=3.7"
@@ -206,7 +211,7 @@ summary = "Measures the displayed width of unicode strings in a terminal"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:0f64c85c529362755c295fd09b025524f36b0536b779a0b29bd0d52ab9e1a65c"
+content_hash = "sha256:853d6f3c4cd6b723f3fb5760106ce2021d5921eba571d38c8a3306d40f0efe9b"
 
 [metadata.files]
 "ansicon 1.89.0" = [
@@ -333,6 +338,10 @@ content_hash = "sha256:0f64c85c529362755c295fd09b025524f36b0536b779a0b29bd0d52ab
 "pyparsing 3.0.8" = [
     {file = "pyparsing-3.0.8-py3-none-any.whl", hash = "sha256:ef7b523f6356f763771559412c0d7134753f037822dad1b16945b7b846f7ad06"},
     {file = "pyparsing-3.0.8.tar.gz", hash = "sha256:7bf433498c016c4314268d95df76c81b842a4cb2b276fa3312cfb1e1d85f6954"},
+]
+"pysnooper 1.1.1" = [
+    {file = "PySnooper-1.1.1-py2.py3-none-any.whl", hash = "sha256:378f13d731a3e04d3d0350e5f295bdd0f1b49fc8a8b8bf2067fe1e5290bd20be"},
+    {file = "PySnooper-1.1.1.tar.gz", hash = "sha256:d17dc91cca1593c10230dce45e46b1d3ff0f8910f0c38e941edf6ba1260b3820"},
 ]
 "pytest 7.1.2" = [
     {file = "pytest-7.1.2-py3-none-any.whl", hash = "sha256:13d0e3ccfc2b6e26be000cb6568c832ba67ba32e719443bfe725814d3c42433c"},
