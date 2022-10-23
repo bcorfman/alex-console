@@ -25,7 +25,7 @@ class Level:
             self._load_layout(filename)
             self._add_border_to_layout()
             self._find_players()
-            self._find_elevators()
+            self._locate_elevators()
             self._find_rooms()
 
     def _load_layout(self, filename):
@@ -39,7 +39,7 @@ class Level:
         lines.append(ROW_LENGTH * ' ')
         self.layout = lines
 
-    def _find_elevators(self):
+    def _locate_elevators(self):
         self.elevators = []
         for row, r_item in enumerate(self.layout):
             col_length = len(r_item) - 3

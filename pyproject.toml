@@ -21,12 +21,10 @@ verify_ssl = true
 dev = [
     "coverage>=6.3.2",
     "coveralls>=3.3.1",
-    "flake8>=4.0.1",
     "nuitka>=0.7.7",
     "pytest>=7.1.2",
     "pytest-asyncio>=0.18.3",
-    "pysnooper>=1.1.1",
-]
+    "pysnooper>=1.1.1"]
 [build-system]
 requires = ["pdm-pep517"]
 build-backend = "pdm.pep517.api"
