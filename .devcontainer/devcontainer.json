@@ -4,7 +4,8 @@
    "memory": "8gb",
    "storage": "32gb"  
   },
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "name": "Python 3.11",
+  "image": "mcr.microsoft.com/devcontainers/python:0-3.11",
   "features": {
     "ghcr.io/devcontainers/features/python:latest": {},
     "ghcr.io/devcontainers-contrib/features/pdm:latest": {}
