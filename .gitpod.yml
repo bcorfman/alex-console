@@ -4,5 +4,9 @@
 
 tasks:
   - name: Install PDM 
-    init: pip install pdm
+    init: |
+       cd /home/gitpod/.pyenv/plugins/python-build/../.. && git pull && cd -
+       pyenv install 3.11.1`
+       pyenv local 3.11.1
+       pip install pdm
     command: pdm install  
