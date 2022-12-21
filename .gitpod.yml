@@ -3,10 +3,12 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-  - name: Install PDM 
+  - name: Install 3.11 and Poetry 
     init: |
        cd /home/gitpod/.pyenv/plugins/python-build/../.. && git pull && cd -
        pyenv install 3.11.1
        pyenv local 3.11.1
-       pip install pdm
-    command: pdm install  
+       pip install poetry
+       poetry config virtualenvs.in-project true
+       poetry config virtualenvs.prefer-active-python true
+    command: poetry install  
