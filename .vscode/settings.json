@@ -1,5 +1,7 @@
 {
     "python.testing.pytestArgs": [
+        "--rootdir",
+        "${workspaceFolder}",
         "tests"
     ],
     "python.testing.unittestEnabled": false,
