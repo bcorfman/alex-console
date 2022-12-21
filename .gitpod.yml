@@ -5,5 +5,4 @@
 tasks:
   - name: Install PDM 
     init: pip install pdm
-  - name: Install project dependencies
-    init: pdm install  
+    command: pdm install  
