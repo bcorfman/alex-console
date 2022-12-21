@@ -14,14 +14,12 @@ Now I'm finishing it in Python with some basic terminal graphics, at least for n
 * At a command prompt in the project directory, type `poetry install` to set up dependencies
 
 ## To run the tests
-EITHER
 * Click the *Open in GitHub Codespaces* badge above to start Visual Studio Code, click the Testing button in the left-hand pane, and click the Run Tests button to execute the ALEX test suite.
 
 OR
 * At a command prompt in the project directory, type `poetry run pytest`.
 
 ## To run the game
-EITHER
 * Start the Visual Studio Code editor in Codespaces, bring up the Terminal window at the bottom, and type `poetry run python main.py`.
 
 OR
