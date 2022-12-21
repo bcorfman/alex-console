@@ -1,4 +1,4 @@
-from game.util import Loc, manhattan_distance, PriorityQueue
+from game.util import Loc, PriorityQueue, manhattan_distance
 
 
 def test_create_loc_from_tuple():

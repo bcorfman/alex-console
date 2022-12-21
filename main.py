@@ -1,9 +1,10 @@
-import os
 import asyncio
 import curses
-from game.util import GAME_TICK, term
-from game.level import Level, Loc
+import os
+
 from game.display import Console
+from game.level import Level, Loc
+from game.util import GAME_TICK, term
 
 LEVEL1 = os.path.join(os.path.dirname(__file__), 'levels', 'level1.txt')
 

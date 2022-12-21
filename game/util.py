@@ -1,8 +1,8 @@
 import heapq
-from blessed import Terminal
 from collections import deque
 from dataclasses import dataclass
 
+from blessed import Terminal
 
 term = Terminal()
 
@@ -20,8 +20,7 @@ class Loc:
     def __eq__(self, other):
         if isinstance(other, Loc):
             return self.row == other.row and self.col == other.col
-        else:
-            return self.row == other[0] and self.col == other[1]
+        return self.row == other[0] and self.col == other[1]
 
     def __hash__(self):
         return hash((self.row, self.col))

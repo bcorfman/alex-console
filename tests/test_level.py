@@ -1,21 +1,21 @@
+from game.blueprint import Hallway, Perimeter, Room
 from game.level import Level
-from game.blueprint import Room, Perimeter, Hallway
-from game.util import loc_ordering, Loc
-from game.search import exhaustive_search, HallwayConstructionProblem, Node
+from game.search import HallwayConstructionProblem, Node, exhaustive_search
+from game.util import Loc, loc_ordering
 from main import LEVEL1
 
 
 def test_load_layout():
     level = Level()
     level._load_layout(LEVEL1)
-    assert (level.layout[1][17] == 'C')
+    assert level.layout[1][17] == 'C'
 
 
 def test_load_layout_and_add_border():
     level = Level()
     level._load_layout(LEVEL1)
     level._add_border_to_layout()
-    assert (level.layout[2][18] == 'C')
+    assert level.layout[2][18] == 'C'
 
 
 def test_location_ordering():
@@ -27,8 +27,8 @@ def test_location_ordering():
     exhaustive_search(problem)
     min_loc = min(problem.visited, key=loc_ordering)
     max_loc = max(problem.visited, key=loc_ordering)
-    assert (Loc(12, 1) == min_loc)
-    assert (Loc(14, 8) == max_loc)
+    assert Loc(12, 1) == min_loc
+    assert Loc(14, 8) == max_loc
 
 
 def test_find_room_name():

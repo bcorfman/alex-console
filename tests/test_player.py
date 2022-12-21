@@ -1,9 +1,10 @@
-# noinspection PyPackageRequirements
 import asyncio
+
 import pytest
+
 from game.characters import Player
 from game.level import Level
-from game.util import Loc, GAME_TICKS_PER_SECOND, GAME_TICK
+from game.util import GAME_TICK, GAME_TICKS_PER_SECOND, Loc
 from main import LEVEL1
 
 
@@ -32,8 +33,8 @@ async def test_player_update():
     # begin moving instantly from current cell by setting numGameTicks to max value
     player.numGameTicks = player.game_ticks_before_each_move + 1
     await player.moveTo(Loc(start_loc.row, start_loc.col - distance - 1))
-    for i in range(GAME_TICKS_PER_SECOND // player_velocity * distance):
+    for _ in range(GAME_TICKS_PER_SECOND // player_velocity * distance):
         player.update()
         await asyncio.sleep(GAME_TICK)
     # see if we've moved the correct distance
-    assert (player.location == updated_loc)
+    assert player.location == updated_loc

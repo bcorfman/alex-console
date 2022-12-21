@@ -1,8 +1,9 @@
 from itertools import chain
-from .level import Level
+
 from .blueprint import Hallway, Room
 from .characters import Player
-from .util import term, Loc
+from .level import Level
+from .util import Loc, term
 
 
 class Console:
@@ -17,12 +18,12 @@ class Console:
                 output = obj.color + player.displayChar
                 break
         with term.location(player.location.col, player.location.row):
-            print(output, end='', flush=True)
+            print(output, end="", flush=True)
 
     def _print_map_location(self, loc):
         row, col = loc.row, loc.col
         level_char = self.level.layout[row][col]
-        output = ''
+        output = ""
         for cls in [Hallway, Room, Player]:
             if level_char == cls.mapChar:
                 output = self.level.translate_char(row, col)
@@ -30,10 +31,10 @@ class Console:
         else:
             output = term.white + level_char
         with term.location(col, row):  # i.e. location(x, y)
-            print(output, end='', flush=True)
+            print(output, end="", flush=True)
 
     def display(self):
-        print(term.clear, end='', flush=True)
+        print(term.clear, end="", flush=True)
         for r, row in enumerate(self.level.layout):
             for c, col in enumerate(row):
                 self._print_map_location(Loc(r, c))
@@ -41,7 +42,10 @@ class Console:
 
     def update(self):
         for player in self.level.players:
-            if player.priorLocation is not None and player.location != player.priorLocation:
+            if (
+                player.priorLocation is not None
+                and player.location != player.priorLocation
+            ):
                 self._print_map_location(player.priorLocation)
 
             self._print_avatar(player)

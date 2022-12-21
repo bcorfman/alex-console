@@ -1,9 +1,9 @@
-from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from concurrent.futures import ProcessPoolExecutor
-from .util import Node, term
+from dataclasses import dataclass, field
+
 from .search import BlueprintSearchProblem, astar_search
-from .util import Loc, GAME_TICKS_PER_SECOND
+from .util import GAME_TICKS_PER_SECOND, Loc, Node, term
 
 
 @dataclass
@@ -15,14 +15,14 @@ class Agent(ABC):
     velocity: int = 1  # cells per second
 
     @abstractmethod
-    def moveTo(self, pos: Loc):
-        """ Plots the shortest path between the current location and the provided location using
+    async def moveTo(self, pos: Loc):
+        """Plots the shortest path between the current location and the provided location using
         search. Updates the movement along the path during each game loop call to self.update().
         Returns True if a path is found; False otherwise"""
 
     @abstractmethod
     def update(self):
-        """ Should be called during each iteration of the game loop to update the position
+        """Should be called during each iteration of the game loop to update the position
         of the agent.
         Return None."""
 
@@ -34,14 +34,16 @@ class Agent(ABC):
 @dataclass
 class Player(Agent):
     actions: list = field(default_factory=list)
-    mapChar: str = '!'
-    priorMapChar: str = ''
+    mapChar: str = "!"
+    priorMapChar: str = ""
     priorLocation: Loc = None
-    displayChar: str = term.reverse('\u25CF')
+    displayChar: str = term.reverse("\u25CF")
 
     async def moveTo(self, pos: Loc):
         # noinspection PyUnresolvedReferences
-        problem = BlueprintSearchProblem(self.parent.layout, Node(self.location), Node(pos))
+        problem = BlueprintSearchProblem(
+            self.parent.layout, Node(self.location), Node(pos)
+        )
         with ProcessPoolExecutor(max_workers=1) as executor:
             future = executor.submit(astar_search, problem)
         completed = future.result()

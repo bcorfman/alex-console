@@ -1,33 +1,34 @@
 from abc import ABC, abstractmethod
-from .util import Loc, manhattan_distance, Node, PriorityQueue, Queue, Stack
+
+from .util import Loc, Node, PriorityQueue, Queue, Stack, manhattan_distance
 
 
 class SearchProblem(ABC):
     @abstractmethod
     def getStartNode(self):
-        """ Returns the start state for the search. """
+        """Returns the start state for the search."""
 
     @abstractmethod
     def isGoal(self, node):
-        """ Returns True if _goal state is found; False otherwise. """
+        """Returns True if _goal state is found; False otherwise."""
 
     @abstractmethod
     def getSuccessors(self, node):
-        """ Given a search node, the agent must make a one or more individual moves from that state,
-          and return them as a list of successors. """
+        """Given a search node, the agent must make a one or more individual moves from that state,
+        and return them as a list of successors."""
 
     @abstractmethod
     def storeResults(self, node, visited, num_explored):
-        """ Once search is complete, use this method to store the results.
+        """Once search is complete, use this method to store the results.
         Visited nodes are passed in directly from graph_search, while other data generated in
-        getSuccessors should be stored as the problem is solved and stored during this method call. """
+        getSuccessors should be stored as the problem is solved and stored during this method call."""
 
     def getCostOfActions(self, actions):
         return len(actions)
 
     @abstractmethod
     def h(self, state):
-        """ Returns the heuristic value of a given state. """
+        """Returns the heuristic value of a given state."""
 
 
 class BlueprintSearchProblem(SearchProblem):
@@ -51,7 +52,7 @@ class BlueprintSearchProblem(SearchProblem):
         self.num_explored = num_explored
 
     def applicable(self, loc):
-        return self._grid[loc.row][loc.col] != ' '
+        return self._grid[loc.row][loc.col] != " "
 
     def apply(self, node, loc):
         return Node(loc, node.actions + [loc], node.cost + 1)
@@ -90,6 +91,7 @@ class HallwayConstructionProblem(SearchProblem):
 
     def getSuccessors(self, node):
         from .blueprint import Hallway
+
         nodes = []
         src_row, src_col = node.state.row, node.state.col
         valid_offsets = []
@@ -99,12 +101,13 @@ class HallwayConstructionProblem(SearchProblem):
             if self._grid[new_row][new_col] == self._search_char:
                 valid_offsets.append((offset_row, offset_col))
                 nodes.append(Node(new_loc, node.actions + [new_loc], node.cost + 1))
-            elif self._grid[new_row][new_col] != ' ':
+            elif self._grid[new_row][new_col] != " ":
                 self.fringe.append(new_loc)
         cross_junction = len(valid_offsets) == 4
-        t_or_corner_junction = (len(valid_offsets) > 1 and
-                                (sum([row for row, _ in valid_offsets]) != 0 or
-                                 sum([col for _, col in valid_offsets]) != 0))
+        t_or_corner_junction = len(valid_offsets) > 1 and (
+            sum([row for row, _ in valid_offsets]) != 0
+            or sum([col for _, col in valid_offsets]) != 0
+        )
         start_node = self.getStartNode()
         dead_end = len(valid_offsets) == 1 and start_node.state != (src_row, src_col)
         if cross_junction or t_or_corner_junction:
@@ -118,7 +121,7 @@ class HallwayConstructionProblem(SearchProblem):
         elif node == self.getStartNode() or not t_or_corner_junction:
             self._search_locations.add(node.state)
         else:
-            raise ValueError('unrecognized junction type')
+            raise ValueError("unrecognized junction type")
         return nodes
 
     def isGoal(self, node):
@@ -138,7 +141,7 @@ class HallwayConstructionProblem(SearchProblem):
 
 
 def exhaustive_search(problem):
-    """ Search until all nodes have been expanded, then return results. """
+    """Search until all nodes have been expanded, then return results."""
     frontier = Stack()
     frontier.update(problem.getStartNode())
     visited = set()

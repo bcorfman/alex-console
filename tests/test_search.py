@@ -1,8 +1,8 @@
-from game.level import Level
 from game.blueprint import Room
-from game.search import breadth_first_search, astar_search, exhaustive_search, HallwayConstructionProblem, \
-    BlueprintSearchProblem
-from game.util import Node, Loc, PriorityQueue
+from game.level import Level
+from game.search import (BlueprintSearchProblem, HallwayConstructionProblem,
+                         astar_search, breadth_first_search, exhaustive_search)
+from game.util import Loc, Node, PriorityQueue
 from main import LEVEL1
 
 
@@ -13,7 +13,8 @@ def test_single_node_expansion_on_elevator():
     start_node = Node(Loc(12, 1))  # row, col
     problem = HallwayConstructionProblem(level.layout, start_node, Room.mapChar)
     expanded_nodes = problem.getSuccessors(start_node)
-    assert len(expanded_nodes) == 2 and Node(Loc(12, 2)) in expanded_nodes and Node(Loc(13, 1)) in expanded_nodes
+    assert len(expanded_nodes) == 2 and Node(Loc(12, 2)) in expanded_nodes and \
+        Node(Loc(13, 1)) in expanded_nodes
 
 
 def test_room_construction_with_elevator():
