@@ -3,6 +3,7 @@
         "--disable=missing-module-docstring",
         "--disable=missing-class-docstring",
         "--disable=missing-function-docstring",
+        "--disable=invalid-name"
     ],
     "python.testing.pytestArgs": [
         "--rootdir",
