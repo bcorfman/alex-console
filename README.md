@@ -9,7 +9,7 @@ Now I'm finishing it in Python with some basic terminal graphics, at least for n
 <img src="graphics/alex_console.png">
 
 ## Prerequisites
-* Click on the "Open with GitHub Codespaces" badge above to launch the project in a browser or on your desktop inside Visual Studio Code.
+* Click on the *Open with GitHub Codespaces* badge above to launch the project in a browser or on your desktop inside Visual Studio Code.
 
 OR
 
