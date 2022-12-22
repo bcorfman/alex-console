@@ -9,6 +9,10 @@ Now I'm finishing it in Python with some basic terminal graphics, at least for n
 <img src="graphics/alex_console.png">
 
 ## Prerequisites
+* Click on the "Open with GitHub Codespaces" badge above to launch the project in a browser or on your desktop inside Visual Studio Code.
+
+OR
+
 * Install [Python](https://www.python.org) 3.9 or higher
 * Install [Poetry](https://python-poetry.org)
 * At a command prompt in the project directory, type `poetry install` to set up dependencies
