@@ -24,7 +24,7 @@ OR
 * At a command prompt in the project directory, type `poetry run pytest`.
 
 ## To run the game
-* Start the Visual Studio Code editor in Codespaces, bring up the Terminal window at the bottom, and type `poetry run python main.py`.
+* In Visual Studio Code, bring up the Terminal window at the bottom, and type `poetry run python main.py`.
 
 OR
 * At a command prompt in the project directory, type `poetry run python main.py`.
