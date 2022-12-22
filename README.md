@@ -18,7 +18,7 @@ OR
 * At a command prompt in the project directory, type `poetry install` to set up dependencies
 
 ## To run the tests
-* Click the *Open in GitHub Codespaces* badge above to start Visual Studio Code, click the Testing button in the left-hand pane, and click the Run Tests button to execute the ALEX test suite.
+* In Visual Studio Code, click the Testing button in the left-hand pane, and click the Run Tests button to execute the ALEX test suite.
 
 OR
 * At a command prompt in the project directory, type `poetry run pytest`.
