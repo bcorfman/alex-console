@@ -1,6 +1,7 @@
 import asyncio
 import curses
 import os
+import signal
 
 from game.display import Console
 from game.level import Level, Loc
@@ -30,13 +31,18 @@ class LeftButtonPressed:
         curses.endwin()
 
 
-class Game:
+class ALEX:
     def __init__(self):
         self.level = Level(LEVEL1)
         self.console = Console(self.level)
         self.selected_player = self.level.get_first_player()
 
-    async def event_loop(self, scr):
+    def resize_event(self, _sig, _frame):
+        self.console.display()
+
+    async def game_loop(self, scr):
+        loop = asyncio.get_event_loop()
+        loop.add_signal_handler(signal.SIGWINCH, self.resize_event, signal.SIGWINCH, None)
         self.console.display()
         scr.refresh()
         while True:
@@ -61,8 +67,8 @@ class Game:
 async def main():
     # logging.basicConfig(filename='debug.txt', filemode='w', encoding='utf-8', level=logging.DEBUG)
     with LeftButtonPressed() as scr:
-        game = Game()
-        await game.event_loop(scr)
+        alex = ALEX()
+        await alex.game_loop(scr)
 
 
 if __name__ == '__main__':
