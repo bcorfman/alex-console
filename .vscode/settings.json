@@ -1,16 +1,15 @@
 {
-    "python.linting.pylintEnabled": false,
-    "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true,
-    "python.linting.flake8Args": [
+    "flake8.args": [
         "--max-line-length=120"
     ],
-    "python.formatting.provider": "yapf",
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": true
-    },
+    "editor.formatOnSaveMode": "file",
+    "editor.defaultFormatter": "eeyore.yapf",
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
+    "editor.formatOnType": false,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
     "python.testing.pytestArgs": [
         "--rootdir",
         "${workspaceFolder}",
@@ -18,5 +17,8 @@
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
-    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "markdownlint.ignore": [
+        
+    ]
 }

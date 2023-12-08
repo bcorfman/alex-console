@@ -7,3 +7,4 @@ __pypackages__/
 *.iml
 *.xml
 .pdm.toml
+coverage.lcov
