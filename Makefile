@@ -17,4 +17,7 @@ lint:
 format:
 	poetry run yapf --in-place --recursive --style pep8 *.py
 
+run:
+	poetry run python main.py
+	
 all: install lint test

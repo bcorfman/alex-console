@@ -16,20 +16,19 @@ Now I'm finishing it in Python with some basic terminal graphics, at least for n
 OR
 
 * Install [Python](https://www.python.org) 3.9 or higher
-* Install [Poetry](https://python-poetry.org)
-* At a command prompt in the project directory, type `poetry install` to set up dependencies
+* At a command prompt in the project directory, type `make install` to set up the project
 
 ## To run the tests
 * In Visual Studio Code, click the Testing button in the left-hand pane, and click the Run Tests button to execute the ALEX test suite.
 
 OR
-* At a command prompt in the project directory, type `poetry run pytest`.
+* At a command prompt in the project directory, type `make test`.
 
 ## To run the game
-* In Visual Studio Code, bring up the Terminal window at the bottom, and type `poetry run python main.py`.
+* In Visual Studio Code, bring up the Terminal window at the bottom, and type `make run`.
 
 OR
-* At a command prompt in the project directory, type `poetry run python main.py`.
+* At a command prompt in the project directory, type `make run`.
 
 ## Game instructions
 * Click anywhere on the map with the mouse to move the player to that location.
