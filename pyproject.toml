@@ -1,25 +1,36 @@
-[tool.poetry]
+[project]
 name = "alex"
-version = "0.1.0"
-description = ""
-authors = ["Brandon Corfman <bcorfman@fastmail.fm>"]
+version = "0.2.0"
+description = "A sci-fi console game prototype using A* pathfinding and some modern asyncio best practices"
+dependencies = [
+    "blessed>=1.20.0",
+    "toml>=0.10.2",
+]
 license = "MIT"
 readme = "README.md"
+requires-python = ">= 3.9"
 
-[tool.poetry.dependencies]
-python = "^3.9"
-blessed = "^1.19.1"
-toml = "^0.10.2"
-
-[tool.poetry.group.dev.dependencies]
-pytest-cov = "^4.0.0"
-coveralls = "^3.3.1"
-nuitka = "^0.7.7"
-pytest = "^7.1.2"
-pytest-asyncio = "^0.18.3"
-flake8 = "^6.0.0"
-yapf = "^0.32.0"
+[tool.rye.scripts]
+alex = { cmd = "python main.py" }
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "pytest>=7.4.4",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.23.3",
+    "coveralls>=3.3.1",
+    "nuitka>=1.9.7",
+    "flake8>=7.0.0",
+    "yapf>=0.40.2",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/alex"]
