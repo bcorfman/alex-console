@@ -4,7 +4,7 @@ SHELL := /bin/bash
 
 install:
 	curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
-	echo 'source "${HOME}/.rye/env"' >> ~/.bashrc
+	echo 'source ${HOME}/.rye/env' > ~/.profile
 	rye sync
 
 test:
