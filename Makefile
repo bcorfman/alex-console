@@ -4,7 +4,8 @@ SHELL := /bin/bash
 
 install:
 	curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
-	source "${HOME}/.rye/env" && rye sync
+	echo 'source "${HOME}/.rye/env"' >> ~/.bashrc
+	rye sync
 
 test:
 	rye run pytest --cov-branch --cov-report term --cov=game tests/
