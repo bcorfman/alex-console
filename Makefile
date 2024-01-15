@@ -4,20 +4,19 @@ SHELL := /bin/bash
 
 install:
 	curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
-	echo 'source ${HOME}/.rye/env' > ~/.profile
-	rye sync
+	${HOME}/.rye/shims/rye sync
 
 test:
-	rye run pytest --cov-branch --cov-report term --cov=game tests/
+	${HOME}/.rye/shims/rye run pytest --cov-branch --cov-report term --cov=game tests/
 	rm .coverage*
 
 lint:
-	rye run flake8 --max-line-length=120 --max-complexity=10 
+	${HOME}/.rye/shims/rye run flake8 --max-line-length=120 --max-complexity=10 
 
 format:
-	rye run yapf --in-place --recursive --style pep8 *.py
+	${HOME}/.rye/shims/rye run yapf --in-place --recursive --style pep8 *.py
 
 run:
-	rye run alex
+	${HOME}/.rye/shims/rye run alex
 	
 all: install lint test
