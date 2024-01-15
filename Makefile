@@ -4,7 +4,7 @@ VERSION=3.12
 
 install:
 	curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
-	rye pin $(VERSION)
+	$(HOME)/.rye/shims/rye pin $(VERSION)
 	$(HOME)/.rye/shims/rye sync
 
 test:
