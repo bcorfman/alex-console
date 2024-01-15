@@ -1,9 +1,7 @@
 .SILENT: install test lint format
 
 install:
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-	brew install rye
+	curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
 	rye sync
 
 test:
