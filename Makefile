@@ -1,10 +1,10 @@
-SHELL := /bin/bash
+SHELL := env PYTHON_VERSION=$(PYTHON_VERSION) /bin/bash
 .SILENT: install test lint format
-VERSION=3.12
+PYTHON_VERSION ?= 3.12
 
 install:
 	curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
-	$(HOME)/.rye/shims/rye pin $(VERSION)
+	$(HOME)/.rye/shims/rye pin $(PYTHON_VERSION)
 	$(HOME)/.rye/shims/rye sync
 
 test:

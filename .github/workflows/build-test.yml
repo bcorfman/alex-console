@@ -15,7 +15,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install project dependencies
-        run: make install $ {{ matrix.python-version }}
+        run: PYTHON_PIN=${{ matrix.python-version }} make install
       - name: Test with pytest
         run: make test
       - name: Coveralls
