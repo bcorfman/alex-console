@@ -1,22 +1,23 @@
 SHELL := /bin/bash
 .SILENT: install test lint format
-
+VERSION=3.12
 
 install:
 	curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
-	${HOME}/.rye/shims/rye sync
+	rye pin $(VERSION)
+	$(HOME)/.rye/shims/rye sync
 
 test:
-	${HOME}/.rye/shims/rye run pytest --cov-branch --cov-report term --cov=game tests/
+	$(HOME)/.rye/shims/rye run pytest --cov-branch --cov-report term --cov=game tests/
 	rm .coverage*
 
 lint:
-	${HOME}/.rye/shims/rye run flake8 --max-line-length=120 --max-complexity=10 
+	$(HOME)/.rye/shims/rye run flake8 --max-line-length=120 --max-complexity=10 
 
 format:
-	${HOME}/.rye/shims/rye run yapf --in-place --recursive --style pep8 *.py
+	$(HOME)/.rye/shims/rye run yapf --in-place --recursive --style pep8 *.py
 
 run:
-	${HOME}/.rye/shims/rye run alex
+	$(HOME)/.rye/shims/rye run alex
 	
 all: install lint test
