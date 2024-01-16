@@ -1,7 +1,7 @@
 from game.blueprint import Room
 from game.level import Level
-from game.search import (BlueprintSearchProblem, HallwayConstructionProblem,
-                         astar_search, breadth_first_search, exhaustive_search)
+from game.search import (BlueprintSearchProblem, HallwayConstructionProblem, astar_search,
+                         breadth_first_search, exhaustive_search)
 from game.util import Loc, Node, PriorityQueue
 from main import LEVEL1
 

@@ -16,9 +16,9 @@ async def test_player_move_to():
     player = Player(name='Brandon', location=loc, parent=level, velocity=vel)
     goal = level.rooms[1].exits[0]
     await player.moveTo(goal)
-    assert (player.actions == list(reversed([Loc(2, i) for i in range(7, 1, -1)] +
-            [Loc(i, 1) for i in range(2, 10)] +
-            [Loc(10, i) for i in range(1, 18)])))
+    assert (player.actions == list(
+        reversed([Loc(2, i) for i in range(7, 1, -1)] + [Loc(i, 1) for i in range(2, 10)] +
+                 [Loc(10, i) for i in range(1, 18)])))
 
 
 @pytest.mark.asyncio

@@ -3,6 +3,41 @@ from dataclasses import dataclass, field
 from .characters import Player
 from .util import Loc, term
 
+IMAP = {
+    'a1': 5,
+    'c1': 6,
+    'e1': 7,
+    'g1': 8,
+    'b2': 10,
+    'd2': 11,
+    'f2': 12,
+    'h2': 13,
+    'a3': 14,
+    'c3': 15,
+    'e3': 16,
+    'g3': 17,
+    'b4': 19,
+    'd4': 20,
+    'f4': 21,
+    'h4': 22,
+    'a5': 23,
+    'c5': 24,
+    'e5': 25,
+    'g5': 26,
+    'b6': 28,
+    'd6': 29,
+    'f6': 30,
+    'h6': 31,
+    'a7': 32,
+    'c7': 33,
+    'e7': 34,
+    'g7': 35,
+    'b8': 37,
+    'd8': 38,
+    'f8': 39,
+    'h8': 40
+}
+
 
 @dataclass(frozen=True)
 class Perimeter:
@@ -12,9 +47,7 @@ class Perimeter:
     def expand_border(self, amt=1):
         tl_row, tl_col = self.top_left.row, self.top_left.col
         br_row, br_col = self.bottom_right.row, self.bottom_right.col
-        return Perimeter(
-            Loc(tl_row - amt, tl_col - amt), Loc(br_row + amt, br_col + amt)
-        )
+        return Perimeter(Loc(tl_row - amt, tl_col - amt), Loc(br_row + amt, br_col + amt))
 
     def find_room_name(self, layout):
         tl_row, tl_col = self.top_left.row, self.top_left.col
@@ -43,10 +76,7 @@ class Room:
             self.perimeter.bottom_right.col,
         )
         if isinstance(item, Player):
-            return (
-                tl_col <= item.location.col <= br_col
-                and tl_row <= item.location.row <= br_row
-            )
+            return (tl_col <= item.location.col <= br_col and tl_row <= item.location.row <= br_row)
         elif isinstance(item, Loc):
             return tl_col <= item.col <= br_col and tl_row <= item.row <= br_row
         else:

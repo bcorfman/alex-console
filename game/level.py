@@ -47,9 +47,7 @@ class Level:
             for col in range(col_length):
                 if r_item[col:col + 4].upper() == "ELEV":
                     loc = Loc(row, col - 2)
-                    problem = HallwayConstructionProblem(
-                        self.layout, Node(loc), Room.mapChar
-                    )
+                    problem = HallwayConstructionProblem(self.layout, Node(loc), Room.mapChar)
                     exhaustive_search(problem)
                     p = Perimeter(
                         min(problem.visited, key=loc_ordering),
@@ -95,17 +93,14 @@ class Level:
             perimeters_found.add(elevator.perimeter)
         # pick first exit of each elevator as a starting point for search
         for elevator in self.elevators:
-            problem = HallwayConstructionProblem(
-                self.layout, Node(elevator.exits[0]), Hallway.mapChar
-            )
+            problem = HallwayConstructionProblem(self.layout, Node(elevator.exits[0]),
+                                                 Hallway.mapChar)
             exhaustive_search(problem)
             room_entrances = problem.room_entrances
             self.hallways.extend(problem.hallways)
             # Collect information on each new room. Don't consider rooms that have already been found.
             for entrance in room_entrances:
-                problem = HallwayConstructionProblem(
-                    self.layout, Node(entrance), Room.mapChar
-                )
+                problem = HallwayConstructionProblem(self.layout, Node(entrance), Room.mapChar)
                 exhaustive_search(problem)
                 p = Perimeter(
                     min(problem.visited, key=loc_ordering),
@@ -127,26 +122,17 @@ class Level:
                             velocity=5,
                             location=Loc(r, c),
                             parent=self,
-                        )
-                    )
+                        ))
                     # once player has been recorded, replace player char on map with either a hallway or room char
                     # so that hallways and rooms are constructed correctly later in __init__.
-                    if (
-                        self.layout[r][c - 1] == Hallway.mapChar
-                        and self.layout[r][c + 1] == Hallway.mapChar
-                    ):
-                        self.layout[r] = (
-                            self.layout[r][:c]
-                            + Hallway.mapChar
-                            + self.layout[r][c + 1:]
-                        )
-                    elif (
-                        self.layout[r][c - 1] == Room.mapChar
-                        and self.layout[r][c + 1] == Room.mapChar
-                    ):
-                        self.layout[r] = (
-                            self.layout[r][:c] + Room.mapChar + self.layout[r][c + 1:]
-                        )
+                    if (self.layout[r][c - 1] == Hallway.mapChar
+                            and self.layout[r][c + 1] == Hallway.mapChar):
+                        self.layout[r] = (self.layout[r][:c] + Hallway.mapChar +
+                                          self.layout[r][c + 1:])
+                    elif (self.layout[r][c - 1] == Room.mapChar
+                          and self.layout[r][c + 1] == Room.mapChar):
+                        self.layout[r] = (self.layout[r][:c] + Room.mapChar +
+                                          self.layout[r][c + 1:])
 
     def get_first_player(self):
         return self.players[0]
