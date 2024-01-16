@@ -7,6 +7,7 @@ from .util import Loc, term
 
 
 class Console:
+
     def __init__(self, level: Level):
         self.level = level
         self.t = 0
@@ -42,10 +43,7 @@ class Console:
 
     def update(self):
         for player in self.level.players:
-            if (
-                player.priorLocation is not None
-                and player.location != player.priorLocation
-            ):
+            if (player.priorLocation is not None and player.location != player.priorLocation):
                 self._print_map_location(player.priorLocation)
 
             self._print_avatar(player)

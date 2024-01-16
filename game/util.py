@@ -33,6 +33,7 @@ class Loc:
 
 
 class Node:
+
     def __init__(self, state, actions=None, cost=None):
         self.state = state
         self.actions = actions or []
@@ -66,6 +67,7 @@ def manhattan_distance(a, b):
 
 
 class Stack:
+
     def __init__(self):
         self._data = []
 
@@ -106,6 +108,7 @@ class Stack:
 
 class Queue:
     """ A container with a first-in-first-out (FIFO) queuing policy. """
+
     def __init__(self, lst=None):
         if lst is None:
             lst = []
@@ -153,6 +156,7 @@ class PriorityQueue:
       in quick retrieval of the lowest-priority item in the queue. This
       data structure allows O(1) access to the lowest-priority item.
     """
+
     def __init__(self, heap=None, _count=None):
         if heap is None:
             heap = []

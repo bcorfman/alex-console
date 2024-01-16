@@ -15,7 +15,7 @@ lint:
 	$(HOME)/.rye/shims/rye run flake8 --max-line-length=120 --max-complexity=10 
 
 format:
-	$(HOME)/.rye/shims/rye run yapf --in-place --recursive --style pep8 *.py
+	$(HOME)/.rye/shims/rye run yapf --in-place --recursive main.py ./tests ./game
 
 run:
 	$(HOME)/.rye/shims/rye run alex

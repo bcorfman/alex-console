@@ -45,10 +45,10 @@ def test_find_elevators():
     level._add_border_to_layout()
     level._locate_elevators()
     elevator1, elevator2 = level.elevators[0], level.elevators[1]
-    assert (elevator1.name == 'ELEVATOR' and elevator1.perimeter.top_left == Loc(1, 44) and
-            elevator1.perimeter.bottom_right == Loc(3, 51))
-    assert (elevator2.name == 'ELEVATOR' and elevator2.perimeter.top_left == Loc(12, 1) and
-            elevator2.perimeter.bottom_right == Loc(14, 8))
+    assert (elevator1.name == 'ELEVATOR' and elevator1.perimeter.top_left == Loc(1, 44)
+            and elevator1.perimeter.bottom_right == Loc(3, 51))
+    assert (elevator2.name == 'ELEVATOR' and elevator2.perimeter.top_left == Loc(12, 1)
+            and elevator2.perimeter.bottom_right == Loc(14, 8))
 
 
 def test_initialize_level():

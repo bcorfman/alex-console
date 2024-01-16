@@ -41,9 +41,7 @@ class Player(Agent):
 
     async def moveTo(self, pos: Loc):
         # noinspection PyUnresolvedReferences
-        problem = BlueprintSearchProblem(
-            self.parent.layout, Node(self.location), Node(pos)
-        )
+        problem = BlueprintSearchProblem(self.parent.layout, Node(self.location), Node(pos))
         with ProcessPoolExecutor(max_workers=1) as executor:
             future = executor.submit(astar_search, problem)
         completed = future.result()

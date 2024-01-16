@@ -4,6 +4,7 @@ from .util import Loc, Node, PriorityQueue, Queue, Stack, manhattan_distance
 
 
 class SearchProblem(ABC):
+
     @abstractmethod
     def getStartNode(self):
         """Returns the start state for the search."""
@@ -32,6 +33,7 @@ class SearchProblem(ABC):
 
 
 class BlueprintSearchProblem(SearchProblem):
+
     def __init__(self, grid, start_node, goal_node):
         self._grid = grid
         self._start_node = start_node
@@ -73,6 +75,7 @@ class BlueprintSearchProblem(SearchProblem):
 
 
 class HallwayConstructionProblem(SearchProblem):
+
     def __init__(self, grid, start_node, search_char):
         self._grid = grid
         self.fringe = []
@@ -104,15 +107,13 @@ class HallwayConstructionProblem(SearchProblem):
             elif self._grid[new_row][new_col] != " ":
                 self.fringe.append(new_loc)
         cross_junction = len(valid_offsets) == 4
-        t_or_corner_junction = len(valid_offsets) > 1 and (
-            sum([row for row, _ in valid_offsets]) != 0
-            or sum([col for _, col in valid_offsets]) != 0
-        )
+        t_or_corner_junction = len(valid_offsets) > 1 and (sum(
+            [row for row, _ in valid_offsets]) != 0 or sum([col for _, col in valid_offsets]) != 0)
         start_node = self.getStartNode()
         dead_end = len(valid_offsets) == 1 and start_node.state != (src_row, src_col)
         if cross_junction or t_or_corner_junction:
             self.hallways.add(Hallway(loc for loc in self._search_locations))
-            self.hallways.add(Hallway((node.state,)))
+            self.hallways.add(Hallway((node.state, )))
             self._search_locations.clear()
         elif dead_end:
             self._search_locations.add(node.state)

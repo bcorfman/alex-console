@@ -45,8 +45,7 @@ class ALEX:
 
     async def game_loop(self, scr):
         loop = asyncio.get_event_loop()
-        loop.add_signal_handler(signal.SIGWINCH, self.resize_event,
-                                signal.SIGWINCH, None)
+        loop.add_signal_handler(signal.SIGWINCH, self.resize_event, signal.SIGWINCH, None)
         self.console.display()
         scr.refresh()
         while True:
@@ -58,11 +57,9 @@ class ALEX:
                 if player:
                     self.selected_player = player
                 else:
-                    if self.selected_player and self.level.is_valid_map_location(
-                            cursor_loc):
+                    if self.selected_player and self.level.is_valid_map_location(cursor_loc):
                         await self.selected_player.moveTo(cursor_loc)
-                print(term.move_xy(col, row), end='',
-                      flush=True)  # moves cursor
+                print(term.move_xy(col, row), end='', flush=True)  # moves cursor
             elif c == ord('q'):
                 break
             await self.level.update()
