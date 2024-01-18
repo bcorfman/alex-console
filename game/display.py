@@ -37,7 +37,7 @@ class Console:
     def display(self):
         print(term.clear, end="", flush=True)
         for r, row in enumerate(self.level.layout):
-            for c, col in enumerate(row):
+            for c, _col in enumerate(row):
                 self._print_map_location(Loc(r, c))
         return True
 

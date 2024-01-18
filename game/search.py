@@ -15,14 +15,15 @@ class SearchProblem(ABC):
 
     @abstractmethod
     def getSuccessors(self, node):
-        """Given a search node, the agent must make a one or more individual moves from that state,
-        and return them as a list of successors."""
+        """Given a search node, the agent must make a one or more individual moves from that 
+        state, and return them as a list of successors."""
 
     @abstractmethod
     def storeResults(self, node, visited, num_explored):
         """Once search is complete, use this method to store the results.
         Visited nodes are passed in directly from graph_search, while other data generated in
-        getSuccessors should be stored as the problem is solved and stored during this method call."""
+        getSuccessors should be stored as the problem is solved and stored during this method 
+        call."""
 
     def getCostOfActions(self, actions):
         return len(actions)
@@ -70,8 +71,8 @@ class BlueprintSearchProblem(SearchProblem):
                 nodes.append(new_node)
         return nodes
 
-    def h(self, loc):
-        return manhattan_distance(self._goal_node.state, loc)
+    def h(self, state):
+        return manhattan_distance(self._goal_node.state, state)
 
 
 class HallwayConstructionProblem(SearchProblem):
@@ -108,7 +109,7 @@ class HallwayConstructionProblem(SearchProblem):
                 self.fringe.append(new_loc)
         cross_junction = len(valid_offsets) == 4
         t_or_corner_junction = len(valid_offsets) > 1 and (sum(
-            [row for row, _ in valid_offsets]) != 0 or sum([col for _, col in valid_offsets]) != 0)
+            (row for row, _ in valid_offsets)) != 0 or sum((col for _, col in valid_offsets)) != 0)
         start_node = self.getStartNode()
         dead_end = len(valid_offsets) == 1 and start_node.state != (src_row, src_col)
         if cross_junction or t_or_corner_junction:

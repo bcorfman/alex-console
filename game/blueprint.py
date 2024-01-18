@@ -77,10 +77,9 @@ class Room:
         )
         if isinstance(item, Player):
             return (tl_col <= item.location.col <= br_col and tl_row <= item.location.row <= br_row)
-        elif isinstance(item, Loc):
+        if isinstance(item, Loc):
             return tl_col <= item.col <= br_col and tl_row <= item.row <= br_row
-        else:
-            raise TypeError("Unrecognized type for Room.__contains___()")
+        raise TypeError("Unrecognized type for Room.__contains___()")
 
 
 class Hallway:
@@ -94,14 +93,12 @@ class Hallway:
     def __eq__(self, other):
         if isinstance(other, frozenset):
             return self.locations == other
-        else:
-            return self.locations == other.locations
+        return self.locations == other.locations
 
     def __contains__(self, item):
         if isinstance(item, Player):
             return item.location in self.locations
-        else:
-            return item in self.locations
+        return item in self.locations
 
     def __hash__(self):
         return hash(self.locations)

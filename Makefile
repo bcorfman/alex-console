@@ -8,11 +8,10 @@ install:
 	$(HOME)/.rye/shims/rye sync
 
 test:
-	$(HOME)/.rye/shims/rye run pytest --cov-branch --cov-report term --cov=game tests/
-	rm .coverage*
+	$(HOME)/.rye/shims/rye run pytest tests/
 
 lint:
-	$(HOME)/.rye/shims/rye run flake8 --max-line-length=120 --max-complexity=10 
+	$(HOME)/.rye/shims/rye run pylint ./game 
 
 format:
 	$(HOME)/.rye/shims/rye run yapf --in-place --recursive main.py ./tests ./game

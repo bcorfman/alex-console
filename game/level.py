@@ -98,7 +98,8 @@ class Level:
             exhaustive_search(problem)
             room_entrances = problem.room_entrances
             self.hallways.extend(problem.hallways)
-            # Collect information on each new room. Don't consider rooms that have already been found.
+            # Collect information on each new room. Don't consider rooms that have already been
+            # found.
             for entrance in room_entrances:
                 problem = HallwayConstructionProblem(self.layout, Node(entrance), Room.mapChar)
                 exhaustive_search(problem)
@@ -114,7 +115,7 @@ class Level:
 
     def _find_players(self):
         for r, row in enumerate(self.layout):
-            for c, col in enumerate(row):
+            for c, _col in enumerate(row):
                 if self.layout[r][c] in PLAYER_CHARS:
                     self.players.append(
                         Player(
@@ -123,8 +124,9 @@ class Level:
                             location=Loc(r, c),
                             parent=self,
                         ))
-                    # once player has been recorded, replace player char on map with either a hallway or room char
-                    # so that hallways and rooms are constructed correctly later in __init__.
+                    # once player has been recorded, replace player char on map with either a
+                    # hallway or room char so hallways and rooms are constructed correctly later
+                    # in __init__.
                     if (self.layout[r][c - 1] == Hallway.mapChar
                             and self.layout[r][c + 1] == Hallway.mapChar):
                         self.layout[r] = (self.layout[r][:c] + Hallway.mapChar +

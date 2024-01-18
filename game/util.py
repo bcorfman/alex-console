@@ -45,14 +45,14 @@ class Node:
     def __eq__(self, other):
         if isinstance(other, Node):
             return self.state == other.state
-        elif isinstance(other, tuple):
+        if isinstance(other, tuple):
             return self.state == other
+        return False
 
     def __lt__(self, other):
         if isinstance(other, Node):
             return self.cost < other.cost
-        else:
-            raise TypeError(f'Cannot compare Node to unknown type {type(other)}')
+        raise TypeError(f'Cannot compare Node to unknown type {type(other)}')
 
     def __hash__(self):
         return hash(self.state)
@@ -169,7 +169,7 @@ class PriorityQueue:
         return f'PriorityQueue({self._data})'
 
     def __contains__(self, item):
-        for p, c, i in self._data:
+        for _, _, i in self._data:
             if i.state == item.state:
                 return True
         return False
