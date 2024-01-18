@@ -47,7 +47,7 @@ testpaths = ["tests"]
 filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.coverage.run]
-source = "game"
+source = ["game"]
 
 [tool.pylint]
 max-line-length = 100
