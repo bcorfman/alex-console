@@ -27,6 +27,7 @@ dev-dependencies = [
     "nuitka>=1.9.7",
     "flake8>=7.0.0",
     "yapf>=0.40.2",
+    "pylint>=3.0.3",
 ]
 
 [tool.hatch.metadata]
@@ -39,3 +40,27 @@ packages = ["src/alex"]
 column_limit = 100
 indent_dictionary_value = "True"
 allow_split_before_dict_value = "False"
+
+[tool.pytest.ini_options]
+addopts = "--cov-branch --cov-report term"
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+source = "game"
+
+[tool.pylint]
+max-line-length = 100
+disable = [
+    "C0103", # (invalid-name)
+    "C0114", # (missing-module-docstring)
+    "C0115", # (missing-class-docstring)
+    "C0116", # (missing-function-docstring)
+    "C0415", # (import-outside-toplevel)
+    "R0401", # (cyclic-import)
+    "R0902", # (too-many-instance-attributes)
+    "R0903", # (too-few-public-methods)
+    "R0913", # (too-many-arguments)
+    "R0914", # (too-many-locals)
+    "W0105", # (pointless-string-statement)
+]
