@@ -28,6 +28,7 @@ dev-dependencies = [
     "flake8>=7.0.0",
     "yapf>=0.40.2",
     "pylint>=3.0.3",
+    "ipython>=8.18.1",
 ]
 
 [tool.hatch.metadata]

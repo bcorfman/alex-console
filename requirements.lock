@@ -5,9 +5,14 @@
 #   pre: false
 #   features: []
 #   all-features: false
+#   with-sources: false
 
 -e file:.
 blessed==1.20.0
+    # via alex
 six==1.16.0
+    # via blessed
 toml==0.10.2
+    # via alex
 wcwidth==0.2.13
+    # via blessed
