@@ -31,3 +31,7 @@ Now I'm finishing it in Python with some basic terminal graphics, at least for n
 * Installing both extensions will
   * Use the code in `settings.json` to run `make format` on each `File:Save`.
   * Display available Make targets within the _Makefile Tasks_ sidebar pane and allow them to be run with a mouse click.
+
+## To do
+* Switch over to the [Pyxel](https://github.com/kitao/pyxel) game engine instead of keeping it on the console.
+* Start developing the gameplay
