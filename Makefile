@@ -5,7 +5,7 @@ PYTHON_VERSION ?= 3.12
 install:
 	curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
 	$(HOME)/.rye/shims/rye pin $(PYTHON_VERSION)
-	$(HOME)/.rye/shims/rye sync --no-lock
+	$(HOME)/.rye/shims/rye sync
 
 test:
 	$(HOME)/.rye/shims/rye run pytest tests/
