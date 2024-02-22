@@ -5,7 +5,7 @@ PYTHON_VERSION ?= 3.12
 install:
 	curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
 	$(HOME)/.rye/shims/rye pin $(PYTHON_VERSION)
-	$(HOME)/.rye/shims/rye sync
+	$(HOME)/.rye/shims/rye sync --no-lock
 
 test:
 	$(HOME)/.rye/shims/rye run pytest tests/
@@ -18,8 +18,5 @@ format:
 
 run:
 	$(HOME)/.rye/shims/rye run alex
-	
-dist:
-	$(HOME)/.rye/shims/rye run python3 -m nuitka --include-module=multiprocessing --include-data-file=levels/level1.txt=levels/level1.txt --onefile --assume-yes-for-downloads main.py
 	
 all: install lint test
