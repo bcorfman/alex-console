@@ -19,4 +19,7 @@ format:
 run:
 	$(HOME)/.rye/shims/rye run alex
 	
+dist:
+	$(HOME)/.rye/shims/rye run python3 -m nuitka --include-module=multiprocessing --include-data-file=levels/level1.txt=levels/level1.txt --onefile --assume-yes-for-downloads main.py
+	
 all: install lint test
