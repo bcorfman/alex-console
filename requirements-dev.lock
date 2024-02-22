@@ -19,7 +19,6 @@ certifi==2023.11.17
 charset-normalizer==3.3.2
     # via requests
 coverage==6.5.0
-    # via coverage
     # via coveralls
     # via pytest-cov
 coveralls==3.3.1
@@ -29,6 +28,9 @@ dill==0.3.7
     # via pylint
 docopt==0.6.2
     # via coveralls
+exceptiongroup==1.2.0
+    # via ipython
+    # via pytest
 executing==2.0.1
     # via stack-data
 flake8==7.0.0
@@ -90,12 +92,17 @@ stack-data==0.6.3
 toml==0.10.2
     # via alex
 tomli==2.0.1
+    # via coverage
+    # via pylint
+    # via pytest
     # via yapf
 tomlkit==0.12.3
     # via pylint
 traitlets==5.14.1
     # via ipython
     # via matplotlib-inline
+typing-extensions==4.9.0
+    # via astroid
 urllib3==2.1.0
     # via requests
 wcwidth==0.2.13
